@@ -1,5 +1,5 @@
 ﻿namespace MotorKontor.BL.Models
 {
-    public class ZipCode
-    }
+    public class ZipCode { }
+    
 }

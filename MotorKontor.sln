@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotorKontor.UI", "MotorKontor.UI\MotorKontor.UI.csproj", "{FA600ABB-B3FF-437C-9C12-A09B83F2EEAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotorKontor.BL", "MotorKontor.BL\MotorKontor.BL.csproj", "{CD985217-239E-4D4A-82A5-83D31D95B85D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA600ABB-B3FF-437C-9C12-A09B83F2EEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA600ABB-B3FF-437C-9C12-A09B83F2EEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA600ABB-B3FF-437C-9C12-A09B83F2EEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA600ABB-B3FF-437C-9C12-A09B83F2EEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD985217-239E-4D4A-82A5-83D31D95B85D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD985217-239E-4D4A-82A5-83D31D95B85D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD985217-239E-4D4A-82A5-83D31D95B85D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD985217-239E-4D4A-82A5-83D31D95B85D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E12B594-1BB1-4F9B-BB27-BD4AB9D36F0B}
+	EndGlobalSection
+EndGlobal

@@ -1,6 +1,8 @@
-﻿namespace MotorKontor.BL.Service
+﻿using MotorKontor.BL.Interfaces;
+
+namespace MotorKontor.BL.Service
 {
-    public class Service
+    public class Service : IService
     {
     }
 }

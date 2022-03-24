@@ -14,35 +14,35 @@
     protected override async Task OnInitializedAsync()
     {
 
-        //Creating the request and specifices settings
-        HttpRequestMessage? request = new HttpRequestMessage();
+        ////Creating the request and specifices settings
+        //HttpRequestMessage? request = new HttpRequestMessage();
 
-        request.Method = new HttpMethod("GET");
-        request.RequestUri = new Uri(baseEndpoint + loginGetCustomers);
-        request.Headers.Add("Authorization", "Bearer " + "test");
-        request.Content.Headers.ContentType
-                        = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+        //request.Method = new HttpMethod("GET");
+        //request.RequestUri = new Uri(baseEndpoint + loginGetCustomers);
+        //request.Headers.Add("Authorization", "Bearer " + "test");
+        //request.Content.Headers.ContentType
+        //                = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-        //Creates client and uses the request
-        var client = HttpClientFactory.Create();
-        var response = await client.SendAsync(request);
+        ////Creates client and uses the request
+        //var client = HttpClientFactory.Create();
+        //var response = await client.SendAsync(request);
 
-        //Checks if client is succesful
-        if(response.IsSuccessStatusCode)
-        {
-            //if succesfull
-            var content = await response.Content.ReadAsStringAsync();
-            var newCustomer = JsonConvert.DeserializeObject<Customer>(content);
-        }
-        else if( response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-        {
-            await BrowserStorage.DeleteAsync("JWT");
-            Customers = null;
-        }
-        else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
-        {
-            Customers = null;
-        }
+        ////Checks if client is succesful
+        //if(response.IsSuccessStatusCode)
+        //{
+        //    //if succesfull
+        //    var content = await response.Content.ReadAsStringAsync();
+        //    var newCustomer = JsonConvert.DeserializeObject<Customer>(content);
+        //}
+        //else if( response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        //{
+        //    await BrowserStorage.DeleteAsync("JWT");
+        //    Customers = null;
+        //}
+        //else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+        //{
+        //    Customers = null;
+        //}
     }
 
     private async Task<string> GetJWT()

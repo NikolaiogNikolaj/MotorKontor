@@ -6,9 +6,10 @@ namespace MotorKontor.BL.Interfaces
     public interface IService
     {
 
-        //   ADMIN INTERFACE METHODS
-        //   POST == admin user need to confirm deal
+        //ADD Registration to a vehicle
         Task<bool> AddRegistrationToVehicleAsync(RegistrationDTO registration, int id);
+
+        //ADD Vehicles to a customer list for simulating leasing
         Task<bool> AddCustomerToVehicleAsync(int customerid, int vehicleid);
 
 

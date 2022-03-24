@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MotorKontor.BL.Interfaces;
 using MotorKontor.BL.Models;
 using MotorKontor.BL.Models.DTO;
+using MotorKontor.BL.Models.JWT;
 
 namespace MotorKontor.BL.Controllers
 {
@@ -37,6 +39,16 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
+        [HttpPost("Refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RevokeTokenRequest model)
+        {
+            var response = await _loginService.RefreshToken(model.Token, ipAddress());
+
+            if(response==null)
+                return new NotFoundObjectResult(response);
+
+            return new OkObjectResult(response);
+        }
 
 
 

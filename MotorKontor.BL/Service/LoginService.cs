@@ -36,19 +36,48 @@ namespace MotorKontor.BL.Service
             return new AuthenticateResponse(response, jwtToken, refreshToken.Token);
         }
 
-        public async Task<Customer> GetCustomerByID(int id)
+
+        public async Task<AuthenticateResponse> RefreshToken(string token, string ipaddress)
         {
-            return await _repository.GetCustomerAsync(id);
+            var response = await _repository.TokenRefreshRevoke(token);
+
+            if (response == null)
+                return null;
+
+            var refreshToken = response.RefreshToken.SingleOrDefault(x => x.Token == token);
+            if (!refreshToken.IsActive)
+                return null;
+
+            var newRefreshToken = GenerateRefreshToken(ipaddress);
+            refreshToken.Revoked = DateTime.UtcNow;
+            refreshToken.RevokedByIp = ipaddress;
+            refreshToken.ReplaceByToken = newRefreshToken.Token;
+
+            response.RefreshToken.Add(refreshToken);
+
+            await _repository.UpdateCustomerAsync(response);
+            var jwt = GenerateJwtToken(response);
+
+            return new AuthenticateResponse(response, jwt, newRefreshToken.Token);
         }
 
-        public Task<AuthenticateResponse> RefreshToken(string token, string ipaddress)
+        public async Task<bool> RevokeToken(string token, string ipadress)
         {
-            throw new NotImplementedException();
-        }
+            var response = await _repository.TokenRefreshRevoke(token);
+            if(response == null)
+                return false;
 
-        public Task<bool> RevokeToken(string token, string ipadress)
-        {
-            throw new NotImplementedException();
+            var refreshToken = response.RefreshToken.SingleOrDefault(x => x.Token == token);
+            if (!refreshToken.IsActive)
+                return false;
+
+            refreshToken.Revoked = DateTime.UtcNow;
+            refreshToken.RevokedByIp = ipadress;
+
+            response.RefreshToken?.Add(refreshToken);
+
+            await _repository.UpdateCustomerAsync(response);
+            return true;
         }
 
         private string GenerateJwtToken(Customer customer)
@@ -83,6 +112,11 @@ namespace MotorKontor.BL.Service
                     CreatedByIp = ipaddress,
                 };
             }
+        }
+
+        public async Task<Customer> GetCustomerByID(int id)
+        {
+            return await _repository.GetCustomerAsync(id);
         }
     }
 }

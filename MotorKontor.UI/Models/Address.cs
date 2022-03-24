@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace MotorKontor.BL.Models
+namespace MotorKontor.UI.Models
 {
     public class Address
     {

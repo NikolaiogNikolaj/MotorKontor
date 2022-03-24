@@ -1,4 +1,4 @@
-﻿namespace MotorKontor.BL.Models
+﻿namespace MotorKontor.UI.Models
 {
     public enum Fuel
     {

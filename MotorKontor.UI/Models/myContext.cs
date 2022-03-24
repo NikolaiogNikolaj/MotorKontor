@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MotorKontor.BL.Models
+namespace MotorKontor.UI.Models
 {
     public class myContext : DbContext
     {

@@ -1,0 +1,108 @@
+﻿@page "/Login"
+@using MotorKontor.UI.Models.DTO
+@using MotorKontor.UI.Models.JWT
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+@inject NavigationManager NavigationManager
+<h3>Login</h3>
+
+
+
+<EditForm Model="@customer" OnSubmit="HandleLogin">
+ <section class="vh-100 gradient-custom">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+
+            <div class="mb-md-5 mt-md-4 pb-5">
+
+              <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+              <p class="text-white-50 mb-5">Please enter your login and password!</p>
+
+              <div class="form-outline form-white mb-4">
+                <InputText id="username" @bind-Value="customer.Username" class="form-control form-control-lg" />
+                <label class="form-label" for="typeEmailX">Email</label>
+              </div>
+
+              <div class="form-outline form-white mb-4">
+                <InputText id="password" @bind-Value="customer.Password" class="form-control form-control-lg" />
+                <label class="form-label" for="typePasswordX">Password</label>
+              </div>
+
+              <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
+
+              <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+
+              <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+              </div>
+
+            </div>
+
+            <div>
+              <p class="mb-0">Don't have an account? <a href="#!" class="text-white-50 fw-bold">Sign Up</a></p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</EditForm>
+
+@code {
+    private CustomerDTO customer = new CustomerDTO();
+
+    string baseEndpoint = "https://localhost:44384";
+    string loginEndpoint = "/Test/Authenticate/Login";
+
+    string loginMessage = "";
+
+
+    private async Task<bool> HandleLogin()
+    {
+        //Creates JSON string out of Customer object
+        string serializedCustomer = JsonConvert.SerializeObject(customer);
+
+        //Creating the request and specifices settings
+        var request = new HttpRequestMessage();
+
+        request.Method = new HttpMethod("POST");
+        request.RequestUri = new Uri(baseEndpoint + loginEndpoint);
+        request.Content = new StringContent(serializedCustomer);
+        request.Content.Headers.ContentType
+                        = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+        //Creates client and uses the request
+        var client = HttpClientFactory.Create();
+        var response = await client.SendAsync(request);
+
+        //Checks if client is succesful
+        if(response.IsSuccessStatusCode)
+        {
+            //if succesfull, deserialize response.Content to Customer object
+            var content = await response.Content.ReadAsStringAsync();
+            var newCustomer = JsonConvert.DeserializeObject<AuthenticateResponse>(content);
+
+            //Sets data in localStorage
+            await BrowserStorage.SetAsync("JWT", newCustomer.JwtToken);
+            await BrowserStorage.SetAsync("RefreshToken", newCustomer.RefreshToken);
+
+            // Navigates to index
+            NavigationManager.NavigateTo("/");
+            return true;
+        }
+        else
+        {
+            loginMessage = "Invalid Login or server error";
+            return false;
+        }
+
+    }
+}

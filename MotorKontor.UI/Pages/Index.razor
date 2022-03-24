@@ -1,9 +1,176 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedLocalStorage BrowserStorage
+@page "/"
+
+@code {
+    public Index() { } //Emtpty initilizer
+
+    string baseEndpoint = "https://localhost:44384";
+    string loginGetCustomers = "/Test/GetCustomersAsync";
+
+    private List<Customer> Customers = new List<Customer>();
+    private List<Customer> CustomerLeasedVehicles = new List<Customer>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //Creating the request and specifices settings
+        HttpRequestMessage? request = new HttpRequestMessage();
+
+        request.Method = new HttpMethod("GET");
+        request.RequestUri = new Uri(baseEndpoint + loginGetCustomers);
+        request.Headers.Add("Authorization", "Bearer " + "test");
+        request.Content.Headers.ContentType
+                        = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+        //Creates client and uses the request
+        var client = HttpClientFactory.Create();
+        var response = await client.SendAsync(request);
+
+        //Checks if client is succesful
+        if(response.IsSuccessStatusCode)
+        {
+            //if succesfull
+            var content = await response.Content.ReadAsStringAsync();
+            var newCustomer = JsonConvert.DeserializeObject<Customer>(content);
+        }
+        else if( response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            await BrowserStorage.DeleteAsync("JWT");
+            Customers = null;
+        }
+        else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+        {
+            Customers = null;
+        }
+    }
+
+    private async Task<string> GetJWT()
+    {
+        var data = await BrowserStorage.GetAsync<string>("JWT");
+        return data.Value;
+    }
+}
+
+
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left shadow h-100 py-2" style="border-left: .25rem solid #1cc88a !important">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Monthly income
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                23452 KR
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left shadow h-100 py-2" style="border-left: .25rem solid #4e73df !important">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                test
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                23452 KR
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left shadow h-100 py-2" style="border-left: .25rem solid #4e73df !important">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Todays work done
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                <div class="progress progress-sm mr-2">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left shadow h-100 py-2" style="border-left: .25rem solid #f6c23e !important">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Pending registrations
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                21
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    New registrations
+                </div>
+                <div class="card-body">
+                    @if (!Customers.Any())
+                    {
+                        <p><em>Loading...</em></p>
+                    }
+                    else
+                    {
+                        @foreach (Customer c in Customers)
+                        {
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item list-group-item-action"></li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white py-3">
+                    New customers
+                </div>
+                <div class="card-body">
+                                      @if (!Customers.Any())
+                    {
+                        <p><em>Loading...</em></p>
+                    }
+                    else
+                    {
+                        @foreach (Customer c in Customers)
+                        {
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item list-group-item-action"></li>
+                            </ul>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

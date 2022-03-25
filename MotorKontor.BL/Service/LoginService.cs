@@ -88,7 +88,8 @@ namespace MotorKontor.BL.Service
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, customer.CustomerID.ToString())
+                    new Claim(ClaimTypes.Role, customer.Firstname + customer.Lastname),
+
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwtKey), SecurityAlgorithms.HmacSha256Signature),

@@ -12,8 +12,8 @@ using MotorKontor.BL.Models;
 namespace MotorKontor.BL.Migrations
 {
     [DbContext(typeof(myContext))]
-    [Migration("20220323123752_initial3")]
-    partial class initial3
+    [Migration("20220325132302_test1")]
+    partial class test1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,10 @@ namespace MotorKontor.BL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("AddressID"), 1L, 1);
 
+                    b.Property<int?>("CustomerID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<string>("StreetAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -45,6 +49,9 @@ namespace MotorKontor.BL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AddressID");
+
+                    b.HasIndex("CustomerID")
+                        .IsUnique();
 
                     b.ToTable("Address");
                 });
@@ -63,9 +70,6 @@ namespace MotorKontor.BL.Migrations
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsAdmin")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Lastname")
                         .HasColumnType("nvarchar(max)");
 
@@ -75,7 +79,7 @@ namespace MotorKontor.BL.Migrations
                     b.Property<string>("PhoneNr")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("UserCreation")
+                    b.Property<DateTime>("UserCreation")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
@@ -113,56 +117,69 @@ namespace MotorKontor.BL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("RegistrationID"), 1L, 1);
 
-                    b.Property<string>("CarManufacturer")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("CarModel")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FuelType")
+                    b.Property<int?>("CustomerID")
+                        .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("VehicleRegistrationDate")
+                    b.Property<int>("FuelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RegistratedEnding")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("RegistratedStart")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VehicleID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.HasKey("RegistrationID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("VehicleID");
 
                     b.ToTable("Registration");
                 });
 
             modelBuilder.Entity("MotorKontor.BL.Models.Vehicle", b =>
                 {
-                    b.Property<int?>("VehicleID")
+                    b.Property<int>("VehicleID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("VehicleID"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VehicleID"), 1L, 1);
 
-                    b.Property<int?>("CustomerID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Fuel")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LeasedEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LeasedStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("RegistrationID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VehicleModel")
+                    b.Property<string>("CarManufacturer")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CarModel")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FuelType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("VehicleRegistrationDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("VehicleID");
 
-                    b.HasIndex("CustomerID");
-
-                    b.HasIndex("RegistrationID");
-
                     b.ToTable("Vehicle");
+                });
+
+            modelBuilder.Entity("MotorKontor.BL.Models.Address", b =>
+                {
+                    b.HasOne("MotorKontor.BL.Models.Customer", "Customer")
+                        .WithOne("UserAddress")
+                        .HasForeignKey("MotorKontor.BL.Models.Address", "CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("MotorKontor.BL.Models.Customer", b =>
@@ -212,22 +229,30 @@ namespace MotorKontor.BL.Migrations
                     b.Navigation("RefreshToken");
                 });
 
-            modelBuilder.Entity("MotorKontor.BL.Models.Vehicle", b =>
+            modelBuilder.Entity("MotorKontor.BL.Models.Registration", b =>
                 {
-                    b.HasOne("MotorKontor.BL.Models.Customer", null)
-                        .WithMany("UserVehicles")
-                        .HasForeignKey("CustomerID");
+                    b.HasOne("MotorKontor.BL.Models.Customer", "Customer")
+                        .WithMany("UserRegistratedVehicles")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("MotorKontor.BL.Models.Registration", "Registration")
+                    b.HasOne("MotorKontor.BL.Models.Vehicle", "Vehicle")
                         .WithMany()
-                        .HasForeignKey("RegistrationID");
+                        .HasForeignKey("VehicleID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Registration");
+                    b.Navigation("Customer");
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("MotorKontor.BL.Models.Customer", b =>
                 {
-                    b.Navigation("UserVehicles");
+                    b.Navigation("UserAddress");
+
+                    b.Navigation("UserRegistratedVehicles");
                 });
 #pragma warning restore 612, 618
         }

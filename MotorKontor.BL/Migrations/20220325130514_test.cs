@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MotorKontor.BL.Migrations
 {
-    public partial class initial : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,25 @@ namespace MotorKontor.BL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Customer",
+                columns: table => new
+                {
+                    CustomerID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserCreation = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customer", x => x.CustomerID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Login",
                 columns: table => new
                 {
@@ -40,46 +59,19 @@ namespace MotorKontor.BL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Registration",
+                name: "Vehicle",
                 columns: table => new
                 {
-                    RegistrationID = table.Column<int>(type: "int", nullable: false)
+                    VehicleID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CarManufacturer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CarModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VehicleRegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    FuelType = table.Column<int>(type: "int", nullable: true)
+                    VehicleRegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FuelType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Registration", x => x.RegistrationID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Customer",
-                columns: table => new
-                {
-                    CustomerID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Firstname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNr = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: true),
-                    UserCreation = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    UserAddressAddressID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Customer", x => x.CustomerID);
-                    table.ForeignKey(
-                        name: "FK_Customer_Address_UserAddressAddressID",
-                        column: x => x.UserAddressAddressID,
-                        principalTable: "Address",
-                        principalColumn: "AddressID",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Vehicle", x => x.VehicleID);
                 });
 
             migrationBuilder.CreateTable(
@@ -109,37 +101,34 @@ namespace MotorKontor.BL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vehicle",
+                name: "Registration",
                 columns: table => new
                 {
-                    VehicleID = table.Column<int>(type: "int", nullable: false)
+                    RegistrationID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    VehicleModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Fuel = table.Column<int>(type: "int", nullable: true),
-                    LeasedStartDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LeasedEndDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    RegistrationID = table.Column<int>(type: "int", nullable: true),
-                    CustomerID = table.Column<int>(type: "int", nullable: true)
+                    CarModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RegistratedStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RegistratedEnding = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FuelType = table.Column<int>(type: "int", nullable: false),
+                    CustomerID = table.Column<int>(type: "int", nullable: false),
+                    VehicleID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Vehicle", x => x.VehicleID);
+                    table.PrimaryKey("PK_Registration", x => x.RegistrationID);
                     table.ForeignKey(
-                        name: "FK_Vehicle_Customer_CustomerID",
+                        name: "FK_Registration_Customer_CustomerID",
                         column: x => x.CustomerID,
                         principalTable: "Customer",
-                        principalColumn: "CustomerID");
+                        principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Vehicle_Registration_RegistrationID",
-                        column: x => x.RegistrationID,
-                        principalTable: "Registration",
-                        principalColumn: "RegistrationID");
+                        name: "FK_Registration_Vehicle_VehicleID",
+                        column: x => x.VehicleID,
+                        principalTable: "Vehicle",
+                        principalColumn: "VehicleID",
+                        onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Customer_UserAddressAddressID",
-                table: "Customer",
-                column: "UserAddressAddressID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_CustomerID",
@@ -147,18 +136,21 @@ namespace MotorKontor.BL.Migrations
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vehicle_CustomerID",
-                table: "Vehicle",
+                name: "IX_Registration_CustomerID",
+                table: "Registration",
                 column: "CustomerID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Vehicle_RegistrationID",
-                table: "Vehicle",
-                column: "RegistrationID");
+                name: "IX_Registration_VehicleID",
+                table: "Registration",
+                column: "VehicleID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Address");
+
             migrationBuilder.DropTable(
                 name: "Login");
 
@@ -166,16 +158,13 @@ namespace MotorKontor.BL.Migrations
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
-                name: "Vehicle");
+                name: "Registration");
 
             migrationBuilder.DropTable(
                 name: "Customer");
 
             migrationBuilder.DropTable(
-                name: "Registration");
-
-            migrationBuilder.DropTable(
-                name: "Address");
+                name: "Vehicle");
         }
     }
 }

@@ -48,7 +48,11 @@ namespace MotorKontor.BL.Repository
         //GET CUSTOMER FROM ID
         public async Task<Customer> GetCustomerAsync(int id)
         {
-            return await _repository.Customer.SingleOrDefaultAsync(x => x.CustomerID == id);
+            var response = await _repository.Customer.FirstOrDefaultAsync(x => x.CustomerID == id);
+            if (response == null)
+                return null;
+
+            return response;
         }
 
         //GET 5 LATEST USERs CREATED
@@ -61,12 +65,16 @@ namespace MotorKontor.BL.Repository
         //GET VEHICLE FROM ID
         public async Task<Vehicle> GetVehicleAsync(int vehicleid)
         {
-            return await _repository.Vehicle.SingleOrDefaultAsync(x => x.VehicleID == vehicleid);
+            var response = await _repository.Vehicle.FirstOrDefaultAsync(x => x.VehicleID == vehicleid);
+            if (response == null)
+                return null;
+
+            return response;
         }
 
         public async Task<List<Vehicle>> GetVehicleListAsync()
         {
-            return await _repository.Vehicle.OrderByDescending(p => p.LeasedStartDate).Take(5).ToListAsync();
+            return await _repository.Vehicle.ToListAsync();
         }
 
 
@@ -74,7 +82,7 @@ namespace MotorKontor.BL.Repository
 
         public async Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel type)
         {
-            return await _repository.Vehicle.Where(x => x.Fuel == type).ToListAsync();
+            return await _repository.Vehicle.Where(x => x.FuelType == type).ToListAsync();
         }
 
         //GET ALL CUSTOMERS BASED ON CITY

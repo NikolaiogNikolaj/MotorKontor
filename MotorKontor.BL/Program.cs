@@ -16,6 +16,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<myContext>(opt => opt
     .EnableDetailedErrors()
+    .UseLazyLoadingProxies()
     .UseSqlServer(config.GetConnectionString("SqlServer")), ServiceLifetime.Transient);
 
 builder.Services.AddScoped<IRepository, Repository>();

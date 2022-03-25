@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MotorKontor.UI.Models
 {
@@ -8,24 +10,19 @@ namespace MotorKontor.UI.Models
         public Vehicle() { }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? VehicleID { get; set; }
-        public string? VehicleModel { get; set; }
-        public Fuel? Fuel { get; set; }
-        public DateTime? LeasedStartDate { get; set; }
-        public DateTime? LeasedEndDate { get; set; }
+        public int VehicleID { get; set; }
+        public string? CarManufacturer { get; set; }
+        public string? CarModel { get; set; }
+        public DateTime VehicleRegistrationDate { get; set; }
+        public Fuel FuelType { get; set; }
 
 
-        public int? RegistrationID { get; set; }
-        [ForeignKey("RegistrationID")]
-        public virtual Registration? Registration { get; set; }
-
-        public Vehicle(string model, Fuel? fuel, int leasemonths)
+        public Vehicle(string createdby, string model, DateTime boughtat, Fuel fuel)
         {
-            VehicleModel = model;
-            Fuel = fuel;
-            LeasedStartDate = DateTime.Now;
-            LeasedEndDate = LeasedStartDate.Value.AddMonths(leasemonths);
+            CarManufacturer = createdby;
+            CarModel = model;
+            VehicleRegistrationDate = boughtat;
+            FuelType = fuel;
         }
     }
 }

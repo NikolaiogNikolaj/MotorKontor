@@ -8,11 +8,11 @@
         public string? JwtToken { get; set; }
         public string? RefreshToken { get; set; }
 
-        public AuthenticateResponse(int id, string firstname, string lastname, string jwt, string refreshtoken)
+        public AuthenticateResponse(Customer customer, string jwt, string refreshtoken)
         {
-            Id = id;
-            Firstname = firstname;
-            Lastname = lastname;
+            Id = customer.CustomerID;
+            Firstname = customer.Firstname;
+            Lastname = customer.Lastname;
             JwtToken = jwt;
             RefreshToken = refreshtoken;
         }

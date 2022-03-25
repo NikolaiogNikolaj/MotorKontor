@@ -8,7 +8,7 @@ using MotorKontor.BL.Models.JWT;
 namespace MotorKontor.BL.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TestController : Controller
     {
         private readonly IService _service;
@@ -26,7 +26,7 @@ namespace MotorKontor.BL.Controllers
             _service = service;
         }
 
-        [HttpPost("Authenticate/Login")]
+        [HttpPost("Authenticate")]
         public async Task<IActionResult> Login([FromBody] LoginDTO c)
         {
             var newCustomer = new Customer(c.Username, c.Password);
@@ -75,20 +75,20 @@ namespace MotorKontor.BL.Controllers
 
 
 
-        [HttpPost("Add Registration")]
-        public async Task<ActionResult<bool>> AddRegistrationToVehicle(RegistrationDTO registration, int vehicleid)
-        {
-            var response = await _service.AddRegistrationToVehicleAsync(registration, vehicleid);
-            if (response == false)
-                return new NotFoundObjectResult(response);
+        //[HttpPost("Add Registration")]
+        //public async Task<ActionResult<bool>> AddRegistrationToVehicle(RegistrationDTO registration, int vehicleid)
+        //{
+        //    var response = await _service.AddRegistrationToVehicleAsync(registration, vehicleid);
+        //    if (response == false)
+        //        return new NotFoundObjectResult(response);
 
-            return new OkObjectResult(response);
-        }
+        //    return new OkObjectResult(response);
+        //}
 
-        [HttpPost("Add Customer")]
-        public async Task<ActionResult<bool>> AddCustomerToVehicle(int customerid, int vehicleid)
+        [HttpPost("Add-Customer")]
+        public async Task<ActionResult> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
         {
-            var response = await _service.AddCustomerToVehicleAsync(customerid, vehicleid);
+            var response = await _service.LeaseVehicleToCustomer(customerid, vehicleid, leasingmonths);
             if (response == false)
                 return new NotFoundObjectResult(response);
 
@@ -125,7 +125,7 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpGet("GetVehicle")]
+        [HttpGet("GetVehicles")]
         public async Task<ActionResult<List<Vehicle>>> GetVehicleAsync()
         {
             var response = await _service.GetVehicleListAsync();
@@ -133,6 +133,12 @@ namespace MotorKontor.BL.Controllers
                 return new NotFoundObjectResult(response);
 
             return new OkObjectResult(response);
+        }
+
+        [HttpGet("Get-Customer")]
+        public async Task<Customer> GetCustomerAsync(int id)
+        {
+            return await _service.GetCustomerAsync(id);
         }
     }
 }

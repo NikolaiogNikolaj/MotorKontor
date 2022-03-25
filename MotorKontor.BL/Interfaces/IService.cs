@@ -6,13 +6,9 @@ namespace MotorKontor.BL.Interfaces
     public interface IService
     {
 
-        //ADD Registration to a vehicle
-        Task<bool> AddRegistrationToVehicleAsync(RegistrationDTO registration, int id);
 
-        //ADD Vehicles to a customer list for simulating leasing
-        Task<bool> AddCustomerToVehicleAsync(int customerid, int vehicleid);
-
-
+        //Adds registration to customer list for simulating leasing
+        Task<bool> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths);
 
 
         //  POST METHODS

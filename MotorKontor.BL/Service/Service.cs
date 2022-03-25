@@ -18,28 +18,19 @@ namespace MotorKontor.BL.Service
         // _repository sørger for at man kan access de metoder.
 
 
-        public async Task<bool> AddRegistrationToVehicleAsync(RegistrationDTO reg, int id)
-        {
-            var vehicleResponse = await _repository.GetVehicleAsync(id);
-            if (vehicleResponse == null)
-                return false;
-
-            var newRegistration = new Registration(reg.CarManufacturer, reg.CarModel, reg.VehicleRegistrationDate, reg.FuelType);
-
-            vehicleResponse.Registration = newRegistration;
-            return await _repository.UpdateVehicleAsync(vehicleResponse);
-        }
 
         //  Method that simulate leasing vehicle
-        public async Task<bool> AddCustomerToVehicleAsync(int customerid, int vehicleid)
+        public async Task<bool> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
         {
             var userResponse = await _repository.GetCustomerAsync(customerid);
-            var vehicleResponse = await _repository.GetVehicleAsync(vehicleid);
+            var vehicle = await _repository.GetVehicleAsync(vehicleid);
 
-            if (userResponse == null || vehicleResponse == null)
+            if (userResponse == null || vehicle == null)
                 return false;
 
-            userResponse.UserVehicles.Add(vehicleResponse);
+            var newRegistration = new Registration(vehicle.CarModel, leasingmonths, vehicle.FuelType, customerid, vehicle.VehicleID);
+
+            userResponse.UserRegistratedVehicles.Add(newRegistration);
             return await _repository.UpdateCustomerAsync(userResponse);
         }
 
@@ -55,7 +46,7 @@ namespace MotorKontor.BL.Service
 
         public async Task<bool> PostVehicleAsync(VehicleDTO v)
         {
-            var newVehicleModel = new Vehicle(v.VehicleModel, v.Fuel, v.LeaseMonths);
+            var newVehicleModel = new Vehicle(v.CarManufacturer, v.CarModel, v.VehicleRegistrationDate, v.FuelType);
             return await _repository.PostVehicleAsync(newVehicleModel);
         }
 

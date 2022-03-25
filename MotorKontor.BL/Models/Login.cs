@@ -7,7 +7,6 @@ namespace MotorKontor.BL.Models
     {
         public Login() { }
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? LoginID { get; set; }
         public string? Username { get; set; }
         public string? Password { get; set; }

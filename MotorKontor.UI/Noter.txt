@@ -1,0 +1,38 @@
+﻿    private async Task<bool> HandleLogin()
+    {
+        //Creates JSON string out of Customer object
+        string serializedCustomer = JsonConvert.SerializeObject(customer);
+
+        //Creating the request and specifices settings
+        var request = new HttpRequestMessage();
+
+        request.Method = new HttpMethod("POST");
+        request.RequestUri = new Uri(baseEndpoint + loginEndpoint);
+        request.Content = new StringContent(serializedCustomer);
+        request.Content.Headers.ContentType
+                        = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+        //Creates client and uses the request
+        var client = HttpClientFactory.Create();
+        var response = await client.SendAsync(request);
+
+        //Checks if client is succesful
+        if(response.IsSuccessStatusCode)
+        {
+            //if succesfull, deserialize response.Content to Customer object
+            var content = await response.Content.ReadAsStringAsync();
+            var newCustomer = JsonConvert.DeserializeObject<AuthenticateResponse>(content);
+
+      
+
+            // Navigates to index
+            NavigationManager.NavigateTo("/");
+            return true;
+        }
+        else
+        {
+            loginMessage = "Invalid Login or server error";
+            return false;
+        }
+
+    }

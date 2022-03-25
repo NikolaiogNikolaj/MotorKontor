@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MotorKontor.BL.Models
 {
@@ -8,20 +9,31 @@ namespace MotorKontor.BL.Models
         public Registration() { }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RegistrationID { get; set; }
-        public string? CarManufacturer { get; set; }
         public string? CarModel { get; set; }
-        public DateTime? VehicleRegistrationDate { get; set; }
-        public Fuel? FuelType { get; set; }
+        public DateTime RegistratedStart { get; set; }
+        public DateTime RegistratedEnding { get; set; }
+        public Fuel FuelType { get; set; }
 
-        public Registration(string carmanufacturer, string model, DateTime created, Fuel fueltype)
+        public int? CustomerID { get; set; }
+        [ForeignKey("CustomerID")]
+        [JsonIgnore]
+        public virtual Customer Customer { get; set; }
+
+        public int? VehicleID { get; set; }
+        [ForeignKey("VehicleID")]
+        [JsonIgnore]
+        public virtual Vehicle Vehicle { get; set; }
+
+
+        public Registration(string? model, int leasingMonths, Fuel fueltype, int customerid, int vehicleid)
         {
-            CarManufacturer = carmanufacturer;
             CarModel = model;
-            VehicleRegistrationDate = created;
+            RegistratedStart = DateTime.UtcNow;
+            RegistratedEnding = RegistratedStart.AddMonths(leasingMonths);
             FuelType = fueltype;
-
+            CustomerID = customerid;
+            VehicleID = vehicleid;
         }
     }
 }

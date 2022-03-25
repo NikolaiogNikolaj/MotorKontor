@@ -7,6 +7,8 @@ namespace MotorKontor.BL.Models.JWT
     [Owned]
     public class RefreshToken
     {
+        public RefreshToken() { }
+
         [Key]
         [JsonIgnore]
         public int Id { get; set; }

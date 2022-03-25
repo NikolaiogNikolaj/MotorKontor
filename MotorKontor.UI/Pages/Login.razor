@@ -2,10 +2,10 @@
 @using MotorKontor.UI.Models.DTO
 @using MotorKontor.UI.Models.JWT
 @using Newtonsoft.Json
-@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
-@inject ProtectedLocalStorage BrowserStorage
 @inject NavigationManager NavigationManager
-<h3>Login</h3>
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject HttpClient Http
 
 
 
@@ -60,49 +60,20 @@
     private CustomerDTO customer = new CustomerDTO();
 
     string baseEndpoint = "https://localhost:44384";
-    string loginEndpoint = "/Test/Authenticate/Login";
+    string loginEndpoint = "/api/Test/Authenticate";
 
     string loginMessage = "";
 
+    string token = "";
 
-    private async Task<bool> HandleLogin()
+    private async Task HandleLogin()
     {
-        //Creates JSON string out of Customer object
-        string serializedCustomer = JsonConvert.SerializeObject(customer);
-
-        //Creating the request and specifices settings
-        var request = new HttpRequestMessage();
-
-        request.Method = new HttpMethod("POST");
-        request.RequestUri = new Uri(baseEndpoint + loginEndpoint);
-        request.Content = new StringContent(serializedCustomer);
-        request.Content.Headers.ContentType
-                        = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
-        //Creates client and uses the request
-        var client = HttpClientFactory.Create();
-        var response = await client.SendAsync(request);
-
-        //Checks if client is succesful
-        if(response.IsSuccessStatusCode)
-        {
-            //if succesfull, deserialize response.Content to Customer object
-            var content = await response.Content.ReadAsStringAsync();
-            var newCustomer = JsonConvert.DeserializeObject<AuthenticateResponse>(content);
-
-            //Sets data in localStorage
-            await BrowserStorage.SetAsync("JWT", newCustomer.JwtToken);
-            await BrowserStorage.SetAsync("RefreshToken", newCustomer.RefreshToken);
-
-            // Navigates to index
-            NavigationManager.NavigateTo("/");
-            return true;
-        }
-        else
-        {
-            loginMessage = "Invalid Login or server error";
-            return false;
-        }
-
+        var result = await Http.PostAsJsonAsync(baseEndpoint + loginEndpoint, customer);
+        token = await result.Content.ReadAsStringAsync();
+        var newCustomer = JsonConvert.DeserializeObject<AuthenticateResponse>(token);
+        await LocalStorage.SetItemAsync("Token", newCustomer.JwtToken);
+        await LocalStorage.SetItemAsync("Refresh-token", newCustomer.RefreshToken);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/");
     }
 }

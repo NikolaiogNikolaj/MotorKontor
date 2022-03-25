@@ -9,7 +9,6 @@ namespace MotorKontor.UI.Models
         public Customer() { }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? CustomerID { get; set; }
         public string? Username { get; set; }
         public string? Password { get; set; }
@@ -17,10 +16,9 @@ namespace MotorKontor.UI.Models
         public string? Lastname { get; set; }
         public string? Email { get; set; }
         public string? PhoneNr { get; set; }
-        public bool? IsAdmin { get; set; }
-        public DateTime? UserCreation { get; set; }
-        //public virtual Address UserAddress { get; set; }
-        public virtual List<Vehicle>? UserVehicles { get; set; }
+        public DateTime UserCreation { get; set; }
+        public virtual Address? UserAddress { get; set; }
+        public virtual List<Registration>? UserRegistratedVehicles { get; set; }
         public virtual List<RefreshToken>? RefreshToken { get; set; }
 
         public Customer(string username, string password)
@@ -38,7 +36,8 @@ namespace MotorKontor.UI.Models
             Email = email;
             PhoneNr = phonenr;
             UserCreation = DateTime.Now;
-            UserVehicles = new List<Vehicle>();
+            UserRegistratedVehicles = new List<Registration>();
+            RefreshToken = new List<RefreshToken>();
         }
     }
 }

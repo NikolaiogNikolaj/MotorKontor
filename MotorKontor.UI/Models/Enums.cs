@@ -6,4 +6,11 @@
         E15,
         E85
     }
+
+    public enum Roles
+    {
+        Customer,
+        Admin,
+        Superadmin
+    }
 }

@@ -2,26 +2,55 @@
 @using MotorKontor.UI.Models.DTO
 @using MotorKontor.UI.Models
 @using System.Net.Http.Headers
+@using Microsoft.AspNetCore.Identity;
 @inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService LocalStorage
 @page "/"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
 @code {
     public Index() { } //Emtpty initilizer
 
     private string baseEndpoint = "https://localhost:44384";
-    private string GetListVehiclesEndpoint = "/api/Test/GetCustomersAsync";
+    private string GetListVehiclesEndpoint = "/api/Test/Get-Customer?id=";
 
     string jwtToken = "";
+
+    string userid = "";
+
+    private Customer customer = new Customer();
 
     private List<Registration> CustomerLeasedVehicles = new List<Registration>();
     private List<Vehicle> Noithing = new List<Vehicle>();
 
+    protected async override Task OnInitializedAsync()
+    {
+        jwtToken = await LocalStorage.GetItemAsync<string>("Token");
+
+        userid = await GetIDClaim();
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("bearer", jwtToken);
 
 
+        var response = await Http.GetAsync(baseEndpoint + GetListVehiclesEndpoint + userid);
+        var responseString = await response.Content.ReadAsStringAsync();
+        customer = JsonConvert.DeserializeObject<Customer>(responseString);
+
+        if(customer != null)
+            CustomerLeasedVehicles = customer.UserRegistratedVehicles;
+    }
+
+    private async Task<string> GetIDClaim()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var userClaims = user.Claims;
+        return userClaims.FirstOrDefault(c => c.Type == "name")?.Value;
+    }
 
 }
-
 
 
 <PageTitle>Index</PageTitle>
@@ -36,10 +65,10 @@
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
                                     <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Monthly payment
+                                        Welcome back
                                     </div>
                                     <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        1499 KR
+                                        @customer.Firstname  @customer.Lastname
                                     </div>
                                 </div>
                             </div>
@@ -99,7 +128,7 @@
                              @foreach (Registration r in CustomerLeasedVehicles)
                                 {
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item list-group-item-action">@r.CarModel  @r.RegistratedStart  @r.RegistratedEnding  @r.Customer.Firstname</li>
+                                        <li class="list-group-item list-group-item-action">@r.CarModel  @r.RegistratedStart  @r.RegistratedEnding </li>
                                     </ul>
                                 }
                             }
@@ -135,3 +164,4 @@
         <span>Do you see this u unauthorized fag?!</span>
     </NotAuthorized>
 </AuthorizeView>
+

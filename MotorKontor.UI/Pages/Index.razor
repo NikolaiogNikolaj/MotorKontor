@@ -17,25 +17,9 @@
     private List<Registration> CustomerLeasedVehicles = new List<Registration>();
     private List<Vehicle> Noithing = new List<Vehicle>();
 
-    protected override async Task OnInitializedAsync()
-    {
-        jwtToken = await LocalStorage.GetItemAsync<string>("Token");
 
-        Http.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", jwtToken);
 
-        var result = await Http.GetAsync(baseEndpoint + GetListVehiclesEndpoint);
 
-        var test = await result.Content.ReadAsStringAsync();
-        var se = JsonConvert.DeserializeObject<Customer>(test);
-        Customer Customer = new Customer();
- 
-
-     
-      
-    
-
-    }
 }
 
 

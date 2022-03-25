@@ -7,7 +7,7 @@ using MotorKontor.BL.Models.JWT;
 
 namespace MotorKontor.BL.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TestController : Controller
@@ -130,7 +130,7 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpGet("Get-Customer"), Authorize]
+        [HttpGet("Get-Customer")]
         public async Task<Customer> GetCustomerAsync(int id)
         {
             return await _service.GetCustomerAsync(id);

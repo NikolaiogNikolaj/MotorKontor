@@ -88,7 +88,9 @@ namespace MotorKontor.BL.Service
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Role, customer.Firstname + customer.Lastname),
+                    new Claim(ClaimTypes.Role, customer.Roles.ToString()),
+                    new Claim(ClaimTypes.Name, customer.CustomerID.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Sub, customer.Username)
 
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),

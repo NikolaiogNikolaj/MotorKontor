@@ -7,6 +7,7 @@ using MotorKontor.BL.Models.JWT;
 
 namespace MotorKontor.BL.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TestController : Controller
@@ -26,6 +27,7 @@ namespace MotorKontor.BL.Controllers
             _service = service;
         }
 
+        [AllowAnonymous]
         [HttpPost("Authenticate")]
         public async Task<IActionResult> Login([FromBody] LoginDTO c)
         {
@@ -75,15 +77,6 @@ namespace MotorKontor.BL.Controllers
 
 
 
-        //[HttpPost("Add Registration")]
-        //public async Task<ActionResult<bool>> AddRegistrationToVehicle(RegistrationDTO registration, int vehicleid)
-        //{
-        //    var response = await _service.AddRegistrationToVehicleAsync(registration, vehicleid);
-        //    if (response == false)
-        //        return new NotFoundObjectResult(response);
-
-        //    return new OkObjectResult(response);
-        //}
 
         [HttpPost("Add-Customer")]
         public async Task<ActionResult> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
@@ -105,6 +98,7 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
+        [AllowAnonymous]
         [HttpPost("Post Customer")]
         public async Task<ActionResult<bool>> PostCustomerAsync(CustomerDTO customer)
         {
@@ -115,7 +109,8 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpGet("GetCustomersAsync")]
+        
+        [HttpGet("GetCustomersAsync"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Customer>>> GetCustomersAsync()
         {
             var response = await _service.GetCustomersListAsync();
@@ -135,7 +130,7 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpGet("Get-Customer")]
+        [HttpGet("Get-Customer"), Authorize]
         public async Task<Customer> GetCustomerAsync(int id)
         {
             return await _service.GetCustomerAsync(id);

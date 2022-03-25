@@ -16,6 +16,7 @@ namespace MotorKontor.BL.Models
         public string? Lastname { get; set; }
         public string? Email { get; set; }
         public string? PhoneNr { get; set; }
+        public Roles Roles { get; set; } 
         public DateTime UserCreation { get; set; }
         public virtual Address? UserAddress { get; set; }
         public virtual List<Registration>? UserRegistratedVehicles { get; set; }
@@ -27,7 +28,7 @@ namespace MotorKontor.BL.Models
             Password = password;
         }
 
-        public Customer(string username, string password, string firstname, string lastname, string email, string phonenr)
+        public Customer(string username, string password, string firstname, string lastname, string email, string phonenr, Roles role)
         {
             Username = username;
             Password = password;
@@ -35,6 +36,7 @@ namespace MotorKontor.BL.Models
             Lastname = lastname;
             Email = email;
             PhoneNr = phonenr;
+            Roles = role;
             UserCreation = DateTime.Now;
             UserRegistratedVehicles = new List<Registration>();
             RefreshToken = new List<RefreshToken>();

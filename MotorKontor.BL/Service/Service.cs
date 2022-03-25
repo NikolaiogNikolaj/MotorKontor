@@ -40,7 +40,7 @@ namespace MotorKontor.BL.Service
         //  POST METHODS 
         public async Task<bool> PostCustomerAsync(CustomerDTO c)
         {
-            var newCustomerModel = new Customer(c.Username, c.Password, c.Firstname, c.Lastname, c.Email, c.PhoneNr);
+            var newCustomerModel = new Customer(c.Username, c.Password, c.Firstname, c.Lastname, c.Email, c.PhoneNr, c.Role);
             return await _repository.PostCustomerAsync(newCustomerModel);
         }
 

@@ -8,5 +8,6 @@
         public string Lastname { get; set; }
         public string Email { get; set; }
         public string PhoneNr { get; set; }
+        public Roles Role { get; set; }
     }
 }

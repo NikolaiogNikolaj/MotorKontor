@@ -37,7 +37,8 @@ namespace MotorKontor.BL.Models
             Email = email;
             PhoneNr = phonenr;
             Roles = role;
-            UserCreation = DateTime.Now;
+            var datetime = DateTime.Now;
+            UserCreation = datetime.Date;
             UserRegistratedVehicles = new List<Registration>();
             RefreshToken = new List<RefreshToken>();
         }

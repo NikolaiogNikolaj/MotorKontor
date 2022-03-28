@@ -11,6 +11,5 @@
     {
         Customer,
         Admin,
-        Superadmin
     }
 }

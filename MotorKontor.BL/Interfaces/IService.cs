@@ -20,6 +20,7 @@ namespace MotorKontor.BL.Interfaces
         Task<List<Customer>> GetCustomersListAsync();
         Task<Vehicle> GetVehicleAsync(int vehicleid);
         Task<List<Vehicle>> GetVehicleListAsync();
+        Task<List<Vehicle>> StoredProcedureExampelFuelType(Fuel fueltype);
         //Task<List<Customer>> GetCustomersByCityAsync(string city);
         Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel fueltype);
     }

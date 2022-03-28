@@ -85,6 +85,12 @@ namespace MotorKontor.BL.Repository
             return await _repository.Vehicle.Where(x => x.FuelType == type).ToListAsync();
         }
 
+        public async Task<List<Vehicle>> StoredProcedureExampelFuelType(Fuel fueltype)
+        {
+            return await _repository.Vehicle.FromSqlRaw<Vehicle>("spGetVehiclesByFuelType {0}", fueltype)
+                .ToListAsync();
+        }
+
         //GET ALL CUSTOMERS BASED ON CITY
 
         //public async Task<List<Customer>> GetCustomerByCityAsync(string city)

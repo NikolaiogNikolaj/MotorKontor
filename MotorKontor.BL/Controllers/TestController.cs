@@ -52,6 +52,17 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
+        [HttpPost("Revoke-token")]
+        public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest model)
+        {
+            var response = await _loginService.RevokeToken(model.Token, ipAddress());
+
+            if (response == null)
+                return new NotFoundObjectResult(response);
+
+            return new OkObjectResult(response);
+        }
+
 
 
 
@@ -134,6 +145,12 @@ namespace MotorKontor.BL.Controllers
         public async Task<Customer> GetCustomerAsync(int id)
         {
             return await _service.GetCustomerAsync(id);
+        }
+
+        [HttpGet("Get-Fueltype")]
+        public async Task<ActionResult<List<Vehicle>>> StoredProcedureExampelFuelType(Fuel fueltype)
+        {
+            return await _service.StoredProcedureExampelFuelType(fueltype);
         }
     }
 }

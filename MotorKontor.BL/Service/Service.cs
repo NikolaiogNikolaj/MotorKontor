@@ -84,6 +84,12 @@ namespace MotorKontor.BL.Service
         //    return await _repository.GetCustomerByCityAsync(city);
         //}
 
+        public async Task<List<Vehicle>> StoredProcedureExampelFuelType(Fuel fueltype)
+        {
+            return await _repository.GetVehiclesByFuelTypeAsync(fueltype);
+        }
+
+
         //  UPDATE METHODS 
 
 

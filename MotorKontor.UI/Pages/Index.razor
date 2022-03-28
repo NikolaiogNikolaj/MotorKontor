@@ -15,9 +15,8 @@
     private string baseEndpoint = "https://localhost:44384";
     private string GetListVehiclesEndpoint = "/api/Test/Get-Customer?id=";
 
-    string jwtToken = "";
-
-    string userid = "";
+    private string jwtToken = "";
+    private string userid = "";
 
     private Customer customer = new Customer();
 
@@ -27,7 +26,6 @@
     protected async override Task OnInitializedAsync()
     {
         jwtToken = await LocalStorage.GetItemAsync<string>("Token");
-
         userid = await GetIDClaim();
 
         Http.DefaultRequestHeaders.Authorization =
@@ -45,9 +43,7 @@
     private async Task<string> GetIDClaim()
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        var userClaims = user.Claims;
-        return userClaims.FirstOrDefault(c => c.Type == "name")?.Value;
+        return authState.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;;
     }
 
 }

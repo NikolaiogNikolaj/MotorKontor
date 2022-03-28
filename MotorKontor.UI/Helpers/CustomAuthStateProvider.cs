@@ -30,6 +30,12 @@ namespace MotorKontor.UI.Helpers
             if(!string.IsNullOrEmpty(token))
                 identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
 
+            //var jwtExpire = identity.Claims.FirstOrDefault(c => c.Type == "exp");
+            //var datetime = DateTimeOffset.FromUnixTimeSeconds((long)Convert.ToDouble(jwtExpire.Value));
+            //if (datetime.UtcDateTime <= DateTime.UtcNow)
+
+
+
             var user = new ClaimsPrincipal(identity);
             var state = new AuthenticationState(user);
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MotorKontor.UI.Data;
 using MotorKontor.UI.Helpers;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+
+
 builder.Services.AddAuthenticationCore();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddHttpContextAccessor();

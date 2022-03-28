@@ -1,28 +1,32 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MotorKontor.BL.Models
 {
     public class Address
     {
         public Address() { }
+
         [Key]
-        public int AddressId { get; set; }        
-        public string StreetNumber { get; set; }
-        public string StreetName { get; set; }
-        //foreign key
-        [ForeignKey("CityZipCodeId")]
-        public int CityZipCodeId { get; set; }
+        public int? AddressID { get; set; }
+        public string? StreetAddress { get; set; }
+        public string? StreetNumber { get; set; }
+        public string? Town { get; set; }
+        public string? Zipcode { get; set; }
 
-         //Navigational properties
-       
-        public CityZipCode CityZipCode { get; set; } // 1-1, 1 CityZipCode per Address
-        
+        public int? CustomerID { get; set; }
+        [ForeignKey("CustomerID")]
+        [JsonIgnore]
+        public virtual Customer Customer { get; set; }
 
-        public Address(string streetNumber, string streetName) {
-            streetNumber = streetNumber;
-            streetName = streetName;
+        public Address(string streetAddress, string streetNumber, string town, string zipcode, int? customerID)
+        {
+            StreetAddress = streetAddress;
+            StreetNumber = streetNumber;
+            Town = town;
+            Zipcode = zipcode;
+            CustomerID = customerID;
         }
-
     }
 }

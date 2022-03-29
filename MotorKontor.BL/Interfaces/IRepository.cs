@@ -7,14 +7,23 @@ namespace MotorKontor.BL.Interfaces
         //  POST METHODS
         Task<bool> PostCustomerAsync(Customer user);
         Task<bool> PostVehicleAsync(Vehicle vehicle);
+        Task<bool> PostAddressAsync(Address address);
+
 
         //  GET METHODS 
+        Task<Customer> GetCustomerById(int id);
+
         Task<Customer> GetCustomerAsync(int id);
         Task<List<Customer>> GetCustomersListAsync();
         Task<Vehicle> GetVehicleAsync(int vehicleid);
         Task<List<Vehicle>> GetVehicleListAsync();
+        Task<List<Vehicle>> GetVehicleByManuAsync();
+
         Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel type);
         //Task<List<Customer>> GetCustomerByCityAsync(string city);
+        Task<Address> GetAddressAsync(int id);
+        Task<List<Registration>> GetCustomerVehicleAsync(int id);
+
 
 
         //  UPDATES

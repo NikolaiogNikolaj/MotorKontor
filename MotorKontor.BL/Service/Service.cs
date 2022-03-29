@@ -49,7 +49,11 @@ namespace MotorKontor.BL.Service
             var newVehicleModel = new Vehicle(v.CarManufacturer, v.CarModel, v.VehicleRegistrationDate, v.FuelType);
             return await _repository.PostVehicleAsync(newVehicleModel);
         }
-
+        public async Task<bool> PostAddressAsync(Address a)
+        {
+            var newAddressModel = new Address(a.StreetAddress, a.StreetNumber, a.Town, a.Zipcode, a.CustomerID);
+            return await _repository.PostAddressAsync(newAddressModel);
+        }
 
 
 
@@ -62,6 +66,11 @@ namespace MotorKontor.BL.Service
         public async Task<List<Customer>> GetCustomersListAsync()
         {
             return await _repository.GetCustomersListAsync();
+        }
+
+        public async Task<List<Registration>> GetCustomerVehicleAsync(int id)
+        {
+            return await _repository.GetCustomerVehicleAsync(id);
         }
 
         public async Task<Vehicle> GetVehicleAsync(int vehicleid)
@@ -78,7 +87,12 @@ namespace MotorKontor.BL.Service
         {
             return await _repository.GetVehiclesByFuelTypeAsync(fueltype);
         }
+        public async Task<Address> GetAddressAsync(int id)
+        {
+            return await _repository.GetAddressAsync(id);
+        }
 
+        //DELETE
         //public async Task<List<Customer>> GetCustomersByCityAsync(string city)
         //{
         //    return await _repository.GetCustomerByCityAsync(city);

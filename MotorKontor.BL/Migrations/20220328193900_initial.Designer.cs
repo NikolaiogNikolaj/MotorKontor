@@ -12,8 +12,8 @@ using MotorKontor.BL.Models;
 namespace MotorKontor.BL.Migrations
 {
     [DbContext(typeof(myContext))]
-    [Migration("20220325130514_test")]
-    partial class test
+    [Migration("20220328193900_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,10 @@ namespace MotorKontor.BL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("AddressID"), 1L, 1);
 
+                    b.Property<int?>("CustomerID")
+                        .IsRequired()
+                        .HasColumnType("int");
+
                     b.Property<string>("StreetAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -45,6 +49,9 @@ namespace MotorKontor.BL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AddressID");
+
+                    b.HasIndex("CustomerID")
+                        .IsUnique();
 
                     b.ToTable("Address");
                 });
@@ -71,6 +78,9 @@ namespace MotorKontor.BL.Migrations
 
                     b.Property<string>("PhoneNr")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Roles")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UserCreation")
                         .HasColumnType("datetime2");
@@ -164,6 +174,17 @@ namespace MotorKontor.BL.Migrations
                     b.ToTable("Vehicle");
                 });
 
+            modelBuilder.Entity("MotorKontor.BL.Models.Address", b =>
+                {
+                    b.HasOne("MotorKontor.BL.Models.Customer", "Customer")
+                        .WithOne("UserAddress")
+                        .HasForeignKey("MotorKontor.BL.Models.Address", "CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("MotorKontor.BL.Models.Customer", b =>
                 {
                     b.OwnsMany("MotorKontor.BL.Models.JWT.RefreshToken", "RefreshToken", b1 =>
@@ -232,6 +253,8 @@ namespace MotorKontor.BL.Migrations
 
             modelBuilder.Entity("MotorKontor.BL.Models.Customer", b =>
                 {
+                    b.Navigation("UserAddress");
+
                     b.Navigation("UserRegistratedVehicles");
                 });
 #pragma warning restore 612, 618

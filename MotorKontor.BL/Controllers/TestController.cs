@@ -35,7 +35,7 @@ namespace MotorKontor.BL.Controllers
 
             var response = await _loginService.Authenticate(newCustomer, ipAddress());
 
-            if(response == null)
+            if (response == null)
                 return new UnauthorizedObjectResult(response);
 
             return new OkObjectResult(response);
@@ -46,7 +46,7 @@ namespace MotorKontor.BL.Controllers
         {
             var response = await _loginService.RefreshToken(model.Token, ipAddress());
 
-            if(response==null)
+            if (response == null)
                 return new NotFoundObjectResult(response);
 
             return new OkObjectResult(response);
@@ -77,7 +77,16 @@ namespace MotorKontor.BL.Controllers
 
 
 
+        //POST
+        [HttpPost("Add-Address")]
+        public async Task<ActionResult<bool>> PostAddressAsync(Address address)
+        {
+            var response = await _service.PostAddressAsync(address);
+            if (response == false)
+                return new NotFoundObjectResult(response);
 
+            return new OkObjectResult(response);
+        }
         [HttpPost("Add-Customer")]
         public async Task<ActionResult> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
         {
@@ -108,9 +117,10 @@ namespace MotorKontor.BL.Controllers
 
             return new OkObjectResult(response);
         }
+        //GET
 
-        
-        [HttpGet("GetCustomersAsync"), Authorize(Roles = "Admin")]
+
+        [HttpGet("GetAllCustomersAsync"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Customer>>> GetCustomersAsync()
         {
             var response = await _service.GetCustomersListAsync();
@@ -134,6 +144,18 @@ namespace MotorKontor.BL.Controllers
         public async Task<Customer> GetCustomerAsync(int id)
         {
             return await _service.GetCustomerAsync(id);
+        }
+        [HttpGet("Get-Customer Address")]
+        public async Task<Address> GetAddressAsync(int id)
+        {
+            return await _service.GetAddressAsync(id);
+        }
+
+
+        [HttpGet("Get-Customer Vehicles")]
+        public async Task<ActionResult<List<Registration>>> GetCustomerVehicleAsync(int id)
+        {
+            return await _service.GetCustomerVehicleAsync(id);
         }
     }
 }

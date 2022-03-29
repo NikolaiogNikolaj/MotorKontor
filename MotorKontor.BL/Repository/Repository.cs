@@ -169,7 +169,7 @@ namespace MotorKontor.BL.Repository
 
         //  REMOVE METHODS 
 
-        public async Task<bool> RemoveVehicleAsync(Vehicle vehicle)
+        public async Task<bool> DeleteVehicleAsync(Vehicle vehicle)
         {
             try
             {
@@ -182,11 +182,35 @@ namespace MotorKontor.BL.Repository
             }
         }
 
-        public async Task<bool> RemoveCustomerAsync(Customer customer)
+        public async Task<bool> DeleteCustomerAsync(Customer customer)
         {
             try
             {
                 _repository.Customer.Remove(customer);
+                return (await _repository.SaveChangesAsync()) > 0;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        public async Task<bool> DeleteCustomerVehicleAsync(Registration registration)
+        {
+            try
+            {
+                _repository.Registration.Remove(registration);
+                return (await _repository.SaveChangesAsync()) > 0;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        public async Task<bool> DeleteCustomerAddressAsync(Address a)
+        {
+            try
+            {
+                _repository.Address.Remove(a);
                 return (await _repository.SaveChangesAsync()) > 0;
             }
             catch (Exception e)

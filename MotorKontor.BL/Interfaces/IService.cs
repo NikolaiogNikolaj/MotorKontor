@@ -27,5 +27,12 @@ namespace MotorKontor.BL.Interfaces
         Task<List<Vehicle>> GetVehicleListAsync();
         //Task<List<Customer>> GetCustomersByCityAsync(string city);
         Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel fueltype);
+        //DELETE METHODS
+
+        Task<bool> DeleteCustomerVehicleAsync(int id, int customerid);
+        Task<bool> DeleteCustomerAddressAsync(int customerid);
+        Task<bool> DeleteCustomerAsync(int id);
+        Task<bool> DeleteVehicleAsync(int vehicleid);
+
     }
 }

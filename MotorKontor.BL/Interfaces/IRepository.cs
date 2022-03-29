@@ -32,8 +32,9 @@ namespace MotorKontor.BL.Interfaces
 
 
         //REMOVE
-        Task<bool> RemoveVehicleAsync(Vehicle vehicle);
-        Task<bool> RemoveCustomerAsync(Customer customer);
+        Task<bool> DeleteVehicleAsync(Vehicle vehicle);
+        Task<bool> DeleteCustomerAsync(Customer customer);
+        Task<bool> DeleteCustomerVehicleAsync(Registration registration);
 
 
         // JWT

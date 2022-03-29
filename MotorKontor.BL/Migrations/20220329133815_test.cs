@@ -4,22 +4,20 @@
 
 namespace MotorKontor.BL.Migrations
 {
-    public partial class initial2 : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Roles",
+            migrationBuilder.CreateIndex(
+                name: "IX_Customer_CustomerID",
                 table: "Customer",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                column: "CustomerID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Roles",
+            migrationBuilder.DropIndex(
+                name: "IX_Customer_CustomerID",
                 table: "Customer");
         }
     }

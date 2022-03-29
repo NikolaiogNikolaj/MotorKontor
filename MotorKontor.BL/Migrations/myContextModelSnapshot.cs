@@ -63,7 +63,7 @@ namespace MotorKontor.BL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("CustomerID"), 1L, 1);
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Firstname")
                         .HasColumnType("nvarchar(max)");
@@ -84,9 +84,11 @@ namespace MotorKontor.BL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CustomerID");
+
+                    b.HasIndex("CustomerID", "Username", "Email");
 
                     b.ToTable("Customer");
                 });
@@ -163,6 +165,9 @@ namespace MotorKontor.BL.Migrations
 
                     b.Property<int>("FuelType")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsLeased")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("VehicleRegistrationDate")
                         .HasColumnType("datetime2");

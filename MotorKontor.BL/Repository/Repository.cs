@@ -41,6 +41,19 @@ namespace MotorKontor.BL.Repository
             }
         }
 
+        public async Task<bool> PostAddressAsync(Address address)
+        {
+            try
+            {
+                await _repository.Address.AddAsync(address);
+                return (await _repository.SaveChangesAsync()) > 0;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
 
 
         //  GET METHODS 
@@ -80,10 +93,6 @@ namespace MotorKontor.BL.Repository
 
         // GET ALL VEHCICLES BASED ON FUEL TYPE
 
-        public async Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel type)
-        {
-            return await _repository.Vehicle.Where(x => x.FuelType == type).ToListAsync();
-        }
 
         public async Task<List<Vehicle>> StoredProcedureExampelFuelType(Fuel fueltype)
         {
@@ -91,13 +100,15 @@ namespace MotorKontor.BL.Repository
                 .ToListAsync();
         }
 
-        //GET ALL CUSTOMERS BASED ON CITY
+        public async Task<List<Customer>> GetCustomersFromCity(string city)
+        {
+            return await _repository.Customer.Where(x => x.UserAddress.Town == city).ToListAsync();
+        }
 
-        //public async Task<List<Customer>> GetCustomerByCityAsync(string city)
-        //{
-        //    return await _repository.Customer.Where(x => x.UserAddress.Town == city).ToListAsync();
-        //}
-
+        public async Task<List<Vehicle>> AvailableVehicleToLease()
+        {
+            return await _repository.Vehicle.Where(x => x.IsLeased == false).ToListAsync();
+        }
 
 
 

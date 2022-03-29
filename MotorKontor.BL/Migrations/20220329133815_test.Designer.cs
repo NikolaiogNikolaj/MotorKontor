@@ -12,8 +12,8 @@ using MotorKontor.BL.Models;
 namespace MotorKontor.BL.Migrations
 {
     [DbContext(typeof(myContext))]
-    [Migration("20220325132302_test1")]
-    partial class test1
+    [Migration("20220329133815_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -79,6 +79,9 @@ namespace MotorKontor.BL.Migrations
                     b.Property<string>("PhoneNr")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Roles")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UserCreation")
                         .HasColumnType("datetime2");
 
@@ -86,6 +89,8 @@ namespace MotorKontor.BL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CustomerID");
+
+                    b.HasIndex("CustomerID");
 
                     b.ToTable("Customer");
                 });
@@ -162,6 +167,9 @@ namespace MotorKontor.BL.Migrations
 
                     b.Property<int>("FuelType")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsLeased")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("VehicleRegistrationDate")
                         .HasColumnType("datetime2");

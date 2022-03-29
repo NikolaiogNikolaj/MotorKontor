@@ -22,15 +22,19 @@ namespace MotorKontor.BL.Service
         //  Method that simulate leasing vehicle
         public async Task<bool> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
         {
-            var userResponse = await _repository.GetCustomerAsync(customerid);
+            Customer userResponse = new Customer();
+            userResponse = await _repository.GetCustomerAsync(customerid);
+
             var vehicle = await _repository.GetVehicleAsync(vehicleid);
 
             if (userResponse == null || vehicle == null)
                 return false;
 
             var newRegistration = new Registration(vehicle.CarModel, leasingmonths, vehicle.FuelType, customerid, vehicle.VehicleID);
-
+            vehicle.IsLeased = true;
             userResponse.UserRegistratedVehicles.Add(newRegistration);
+
+            await _repository.UpdateVehicleAsync(vehicle);
             return await _repository.UpdateCustomerAsync(userResponse);
         }
 
@@ -50,7 +54,13 @@ namespace MotorKontor.BL.Service
             return await _repository.PostVehicleAsync(newVehicleModel);
         }
 
-
+        public async Task<bool> PostAddressAsync(AddressDTO a, int customerid)
+        {
+            var response = await _repository.GetCustomerAsync(customerid);
+            var newAddressModel = new Address(a.StreetAddress, a.StreetNumber, a.Town, a.Zipcode);
+            response.UserAddress = newAddressModel;
+            return await _repository.UpdateCustomerAsync(response);
+        }
 
 
         //  GET METHODS 
@@ -74,19 +84,18 @@ namespace MotorKontor.BL.Service
             return await _repository.GetVehicleListAsync();
         }
 
-        public async Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel fueltype)
-        {
-            return await _repository.GetVehiclesByFuelTypeAsync(fueltype);
-        }
-
-        //public async Task<List<Customer>> GetCustomersByCityAsync(string city)
-        //{
-        //    return await _repository.GetCustomerByCityAsync(city);
-        //}
-
         public async Task<List<Vehicle>> StoredProcedureExampelFuelType(Fuel fueltype)
         {
-            return await _repository.GetVehiclesByFuelTypeAsync(fueltype);
+            return await _repository.StoredProcedureExampelFuelType(fueltype);
+        }
+
+        public async Task<List<Customer>> GetCustomersFromCity(string city)
+        {
+            return await _repository.GetCustomersFromCity(city);
+        }
+        public async Task<List<Vehicle>> AvailableVehicleToLease()
+        {
+            return await _repository.AvailableVehicleToLease();
         }
 
 

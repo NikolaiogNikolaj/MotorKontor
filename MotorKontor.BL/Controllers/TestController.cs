@@ -7,7 +7,7 @@ using MotorKontor.BL.Models.JWT;
 
 namespace MotorKontor.BL.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TestController : Controller
@@ -86,10 +86,19 @@ namespace MotorKontor.BL.Controllers
 
 
 
+        //POST
+        [HttpPost("AddAddress")]
+        public async Task<ActionResult<bool>> PostAddressAsync(AddressDTO address, int customerid)
+        {
+            var response = await _service.PostAddressAsync(address, customerid);
+            if (response == false)
+                return new NotFoundObjectResult(response);
+
+            return new OkObjectResult(response);
+        }
 
 
-
-        [HttpPost("Add-Customer")]
+        [HttpPost("AddCustomer")]
         public async Task<ActionResult> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
         {
             var response = await _service.LeaseVehicleToCustomer(customerid, vehicleid, leasingmonths);
@@ -99,7 +108,7 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpPost("Post vehicle")]
+        [HttpPost("PostVehicle")]
         public async Task<ActionResult<bool>> PostVehicleAsync(VehicleDTO vehicle)
         {
             var response = await _service.PostVehicleAsync(vehicle);
@@ -110,7 +119,7 @@ namespace MotorKontor.BL.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Post Customer")]
+        [HttpPost("PostCustomer")]
         public async Task<ActionResult<bool>> PostCustomerAsync(CustomerDTO customer)
         {
             var response = await _service.PostCustomerAsync(customer);
@@ -141,16 +150,28 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpGet("Get-Customer")]
+        [HttpGet("GetCustomer")]
         public async Task<Customer> GetCustomerAsync(int id)
         {
             return await _service.GetCustomerAsync(id);
         }
 
-        [HttpGet("Get-Fueltype")]
+        [HttpGet("GetFueltype")]
         public async Task<ActionResult<List<Vehicle>>> StoredProcedureExampelFuelType(Fuel fueltype)
         {
             return await _service.StoredProcedureExampelFuelType(fueltype);
+        }
+
+        [HttpGet("GetAvailableVehicles")]
+        public async Task<ActionResult<List<Vehicle>>> AvailableVehicleToLease()
+        {
+            return await _service.AvailableVehicleToLease();
+        }
+        
+        [HttpGet("GetCustomersByCity")]
+        public async Task<ActionResult<List<Customer>>> GetCustomersFromCity(string city)
+        {
+            return await _service.GetCustomersFromCity(city);
         }
     }
 }

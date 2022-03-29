@@ -14,6 +14,7 @@ namespace MotorKontor.BL.Interfaces
         //  POST METHODS
         Task<bool> PostCustomerAsync(CustomerDTO user);
         Task<bool> PostVehicleAsync(VehicleDTO vehicle);
+        Task<bool> PostAddressAsync(AddressDTO address, int customerid);
 
         //  GET METHODS 
         Task<Customer> GetCustomerAsync(int id);
@@ -21,7 +22,8 @@ namespace MotorKontor.BL.Interfaces
         Task<Vehicle> GetVehicleAsync(int vehicleid);
         Task<List<Vehicle>> GetVehicleListAsync();
         Task<List<Vehicle>> StoredProcedureExampelFuelType(Fuel fueltype);
-        //Task<List<Customer>> GetCustomersByCityAsync(string city);
-        Task<List<Vehicle>> GetVehiclesByFuelTypeAsync(Fuel fueltype);
+        Task<List<Customer>> GetCustomersFromCity(string city);
+        Task<List<Vehicle>> AvailableVehicleToLease();
+
     }
 }

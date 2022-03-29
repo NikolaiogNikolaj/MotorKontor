@@ -15,6 +15,8 @@ namespace MotorKontor.BL.Models
         public string? CarModel { get; set; }
         public DateTime VehicleRegistrationDate { get; set; }
         public Fuel FuelType { get; set; }
+        public bool IsLeased { get; set; }
+
 
 
         public Vehicle(string createdby, string model, DateTime boughtat, Fuel fuel)

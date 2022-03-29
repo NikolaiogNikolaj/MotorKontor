@@ -1,9 +1,11 @@
-﻿using MotorKontor.BL.Models.JWT;
+﻿using Microsoft.EntityFrameworkCore;
+using MotorKontor.BL.Models.JWT;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MotorKontor.BL.Models
 {
+    [Index(nameof(CustomerID), nameof(Username), nameof(Email))]
     public class Customer
     {
         public Customer() { }

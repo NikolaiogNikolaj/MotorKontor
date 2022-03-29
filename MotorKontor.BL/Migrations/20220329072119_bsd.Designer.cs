@@ -12,8 +12,8 @@ using MotorKontor.BL.Models;
 namespace MotorKontor.BL.Migrations
 {
     [DbContext(typeof(myContext))]
-    [Migration("20220328074141_storedProcedure")]
-    partial class storedProcedure
+    [Migration("20220329072119_bsd")]
+    partial class bsd
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,6 +165,9 @@ namespace MotorKontor.BL.Migrations
 
                     b.Property<int>("FuelType")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsLeased")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime>("VehicleRegistrationDate")
                         .HasColumnType("datetime2");

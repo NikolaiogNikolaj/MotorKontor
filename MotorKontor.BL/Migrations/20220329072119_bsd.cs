@@ -5,26 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace MotorKontor.BL.Migrations
 {
-    public partial class test : Migration
+    public partial class bsd : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Address",
-                columns: table => new
-                {
-                    AddressID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StreetNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Town = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Zipcode = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Address", x => x.AddressID);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Customer",
                 columns: table => new
@@ -37,6 +21,7 @@ namespace MotorKontor.BL.Migrations
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNr = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Roles = table.Column<int>(type: "int", nullable: false),
                     UserCreation = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -67,11 +52,35 @@ namespace MotorKontor.BL.Migrations
                     CarManufacturer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CarModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     VehicleRegistrationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FuelType = table.Column<int>(type: "int", nullable: false)
+                    FuelType = table.Column<int>(type: "int", nullable: false),
+                    IsLeased = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vehicle", x => x.VehicleID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Address",
+                columns: table => new
+                {
+                    AddressID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StreetAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StreetNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Town = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Zipcode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CustomerID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Address", x => x.AddressID);
+                    table.ForeignKey(
+                        name: "FK_Address_Customer_CustomerID",
+                        column: x => x.CustomerID,
+                        principalTable: "Customer",
+                        principalColumn: "CustomerID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,6 +138,12 @@ namespace MotorKontor.BL.Migrations
                         principalColumn: "VehicleID",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Address_CustomerID",
+                table: "Address",
+                column: "CustomerID",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_CustomerID",

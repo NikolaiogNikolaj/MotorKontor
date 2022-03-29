@@ -4,11 +4,11 @@
 
 namespace MotorKontor.BL.Migrations
 {
-    public partial class storedProcedure : Migration
+    public partial class storedProcedures : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            string procedure = @"CREATE PROCEDURE spGetVehiclesByFuelType
+            string procedure1 = @"CREATE PROCEDURE spGetVehiclesByFuelType
                 @FuelType int
                 as
                 Begin
@@ -16,14 +16,22 @@ namespace MotorKontor.BL.Migrations
 	                WHERE FuelType = @FuelType
                 END";
 
-            migrationBuilder.Sql(procedure);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customer",
+                table: "Customer",
+                column: "CustomerID");
+
+
+            migrationBuilder.Sql(procedure1);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            string procedure = @"Drop PROCEDURE spGetVehiclesByFuelType";
+            string procedure1 = @"Drop PROCEDURE spGetVehiclesByFuelType";
 
-            migrationBuilder.Sql(procedure);
+            migrationBuilder.Sql(procedure1);
+
         }
     }
 }

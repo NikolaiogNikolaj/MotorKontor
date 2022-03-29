@@ -19,5 +19,13 @@ namespace MotorKontor.BL.Models
         [ForeignKey("CustomerID")]
         [JsonIgnore]
         public virtual Customer Customer { get; set; }
+
+        public Address(string streetAddress, string streetNumber, string town, string zipcode)
+        {
+            StreetAddress = streetAddress;
+            StreetNumber = streetNumber;
+            Town = town;
+            Zipcode = zipcode;
+        }
     }
 }

@@ -25,5 +25,7 @@ namespace MotorKontor.BL.Interfaces
         Task<List<Customer>> GetCustomersFromCity(string city);
         Task<List<Vehicle>> AvailableVehicleToLease();
 
+        Task<bool> UpdateCustomer(CustomerDTO customer);
+
     }
 }

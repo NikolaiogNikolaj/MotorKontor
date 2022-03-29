@@ -101,6 +101,11 @@ namespace MotorKontor.BL.Service
 
         //  UPDATE METHODS 
 
+        public async Task<bool> UpdateCustomer(CustomerDTO c)
+        {
+            var newModel = new Customer(Int32.Parse(c.CustomerId), c.Username, c.Password, c.Firstname, c.Lastname, c.Email, c.PhoneNr, c.Role);
+            return await _repository.UpdateCustomerAsync(newModel);
+        }
 
         //  REMOVE METHODS 
         public async Task<bool> RemoveCustomerAsync(int id)

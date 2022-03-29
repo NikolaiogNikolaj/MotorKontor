@@ -1,0 +1,100 @@
+﻿@page "/Registration"
+@using MotorKontor.UI.Models.DTO
+@using MotorKontor.UI.Models.JWT
+@using Newtonsoft.Json
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@inject ILocalStorageService LocalStorage
+@inject HttpClient Http
+
+
+
+<EditForm Model="@customer" OnSubmit="HandleRegistration">
+    <section class="container">
+        <div class="row centered-form">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-sm-offset-2 col-md-offset-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+						<h3 class="panel-title">Please sign up <small>It's free!</small></h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form">
+			    			<div class="row" style="margin-top: 1rem;">
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+									<input type="text" name="first_name" id="first_name" class="form-control input-sm" placeholder="First Name">
+			    					</div>
+			    				</div>
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+			    						<input type="text" name="last_name" id="last_name" class="form-control input-sm" placeholder="Last Name">
+			    					</div>
+			    				</div>
+			    			</div>
+
+			    			<div class="form-group" style="margin-top: 1rem;">
+			    				<input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
+			    			</div>
+
+			    			<div class="row" style="margin-top: 1rem;">
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+			    						<input type="username" name="username" id="username" class="form-control input-sm" placeholder="Username">
+			    					</div>
+			    				</div>
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+			    						<input type="password" name="password" id="password_confirmation" class="form-control input-sm" placeholder="Password">
+			    					</div>
+			    				</div>
+			    			</div>
+
+							<div class="row" style="margin-top: 1rem;">
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+			    						<input type="text" name="number" id="number" class="form-control input-sm" placeholder="Phone number">
+			    					</div>
+			    				</div>
+			    				<div class="col-xs-6 col-sm-6 col-md-6">
+			    					<div class="form-group">
+										<div class="d-flex justify-content-between">
+											<label class="form-label h-50" style="margin: 0;">0</label>
+											<label class="form-label h-50" style="margin: 0;">1</label>
+											<label class="form-label h-50" style="margin: 0;">2</label>
+										</div>
+			    						<input type="range" name="role" id="role" class="form-range" min="0" max="2">
+			    					</div>
+			    				</div>
+			    			</div>
+			    			
+			    			<input type="submit" value="Register" class="btn btn-info btn-block" style="margin-top: 1rem;">
+			    		
+			    		</form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</EditForm>
+
+@code {
+    private CustomerDTO customer = new CustomerDTO();
+
+    string baseEndpoint = "https://localhost:44384";
+    string loginEndpoint = "/api/Test/CustomerRegistration"; //Dummy
+
+    string loginMessage = "";
+
+    string token = "";
+
+    private async Task HandleRegistration()
+    {
+        var result = await Http.PostAsJsonAsync(baseEndpoint + loginEndpoint, customer);
+        token = await result.Content.ReadAsStringAsync();
+        var newCustomer = JsonConvert.DeserializeObject<AuthenticateResponse>(token);
+        await LocalStorage.SetItemAsync("Token", newCustomer.JwtToken);
+        await LocalStorage.SetItemAsync("Refresh-token", newCustomer.RefreshToken);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("/");
+    }
+}

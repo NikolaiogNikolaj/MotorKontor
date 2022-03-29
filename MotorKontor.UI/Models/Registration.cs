@@ -14,16 +14,9 @@ namespace MotorKontor.UI.Models
         public DateTime RegistratedStart { get; set; }
         public DateTime RegistratedEnding { get; set; }
         public Fuel FuelType { get; set; }
-
         public int? CustomerID { get; set; }
-        [ForeignKey("CustomerID")]
-        [JsonIgnore]
-        public virtual Customer Customer { get; set; }
-
         public int? VehicleID { get; set; }
-        [ForeignKey("VehicleID")]
-        [JsonIgnore]
-        public virtual Vehicle Vehicle { get; set; }
+
 
 
         public Registration(string? model, int leasingMonths, Fuel fueltype, int customerid, int vehicleid)

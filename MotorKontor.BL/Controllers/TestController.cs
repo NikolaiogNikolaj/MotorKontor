@@ -7,7 +7,6 @@ using MotorKontor.BL.Models.JWT;
 
 namespace MotorKontor.BL.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TestController : Controller
@@ -173,5 +172,18 @@ namespace MotorKontor.BL.Controllers
         {
             return await _service.GetCustomersFromCity(city);
         }
+
+
+
+
+        [HttpPost("Updatetest")]
+        public async Task<ActionResult<bool>> UpdateCustomer([FromBody] CustomerDTO customer)
+        {
+            return await _service.UpdateCustomer(customer);
+        }
+
+
+
+
     }
 }

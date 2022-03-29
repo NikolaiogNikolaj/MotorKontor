@@ -16,8 +16,8 @@ namespace MotorKontor.UI.Models
         public string? Lastname { get; set; }
         public string? Email { get; set; }
         public string? PhoneNr { get; set; }
-        public DateTime UserCreation { get; set; }
         public Roles Roles { get; set; }
+        public DateTime UserCreation { get; set; }
         public virtual Address? UserAddress { get; set; }
         public virtual List<Registration>? UserRegistratedVehicles { get; set; }
         public virtual List<RefreshToken>? RefreshToken { get; set; }

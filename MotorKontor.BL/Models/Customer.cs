@@ -44,5 +44,20 @@ namespace MotorKontor.BL.Models
             UserRegistratedVehicles = new List<Registration>();
             RefreshToken = new List<RefreshToken>();
         }
+
+        public Customer(int customerid, string username, string password, string firstname, string lastname, string email, string phonenr, Roles role)
+        {
+            CustomerID = customerid;
+            Username = username;
+            Password = password;
+            Firstname = firstname;
+            Lastname = lastname;
+            Email = email;
+            PhoneNr = phonenr;
+            Roles = role;
+            var datetime = DateTime.Now;
+            UserCreation = datetime.Date;
+        }
     }
 }
+

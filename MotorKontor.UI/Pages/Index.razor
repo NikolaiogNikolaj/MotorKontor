@@ -13,12 +13,13 @@
     public Index() { } //Emtpty initilizer
 
     private string baseEndpoint = "https://localhost:44384";
-    private string GetListVehiclesEndpoint = "/api/Test/Get-Customer?id=";
+    private string GetListVehiclesEndpoint = "/api/Test/GetCustomer?id=";
 
     private string jwtToken = "";
     private string userid = "";
 
     private Customer customer = new Customer();
+    //private CustomerDTO customerDTO = new CustomerDTO
 
     private List<Registration> CustomerLeasedVehicles = new List<Registration>();
     private List<Vehicle> Noithing = new List<Vehicle>();
@@ -31,12 +32,12 @@
         Http.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("bearer", jwtToken);
 
-
         var response = await Http.GetAsync(baseEndpoint + GetListVehiclesEndpoint + userid);
         var responseString = await response.Content.ReadAsStringAsync();
         customer = JsonConvert.DeserializeObject<Customer>(responseString);
 
-        if(customer != null)
+
+        if (customer != null)
             CustomerLeasedVehicles = customer.UserRegistratedVehicles;
     }
 

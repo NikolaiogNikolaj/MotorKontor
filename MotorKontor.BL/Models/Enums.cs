@@ -2,9 +2,11 @@
 {
     public enum Fuel
     {
-        E10,
-        E15,
-        E85
+        Gasoline,
+        Diesel,
+        EV,
+        PluginHybrid,
+        Hydrogene
     }
 
     public enum Roles

@@ -3,13 +3,13 @@
 @using MotorKontor.UI.Models.JWT
 @using Newtonsoft.Json
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthStateProvider
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ILocalStorageService LocalStorage
 @inject HttpClient Http
 
 
 
-<EditForm Model="@customer" OnSubmit="HandleRegistration">
+<EditForm Model="@customer" OnSubmit="LeaseVehicles">
     <section class="container">
         <div class="row centered-form">
             <div class="col-xs-12 col-sm-12 col-md-12 col-sm-offset-2 col-md-offset-4">
@@ -87,14 +87,20 @@
 
     string token = "";
 
-    private async Task HandleRegistration()
+    private async Task LeaseVehicles()
     {
         var result = await Http.PostAsJsonAsync(baseEndpoint + loginEndpoint, customer);
         token = await result.Content.ReadAsStringAsync();
         var newCustomer = JsonConvert.DeserializeObject<AuthenticateResponse>(token);
         await LocalStorage.SetItemAsync("Token", newCustomer.JwtToken);
         await LocalStorage.SetItemAsync("Refresh-token", newCustomer.RefreshToken);
-        await AuthStateProvider.GetAuthenticationStateAsync();
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
         NavigationManager.NavigateTo("/");
+    }
+
+	private async Task<string> GetIDClaim()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        return authState.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;;
     }
 }

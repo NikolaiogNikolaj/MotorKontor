@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MotorKontor.UI.Models.DTO
+@using MotorKontor.UI.Models
+@using System.Net.Http.Headers
+@using Microsoft.AspNetCore.Identity;
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService LocalStorage
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@page "/customeraddress"
+<h3>customerAddress</h3>
+
+@code {
+
+    private string baseEndpoint = "https://localhost:44384";
+    private string addAddress = "/api/Test/AddAddress";
+
+    private string jwtToken = "";
+    private string userid = "";
+
+    private AddressDTO address = new AddressDTO();
+    private CombinedAddressCustomerDTO dto = new CombinedAddressCustomerDTO();
+    public Customer customer = new Customer();
+    //private CustomerDTO customerDTO = new CustomerDTO
+
+
+
+    private async Task SubmitAddress()
+    {
+        jwtToken = await LocalStorage.GetItemAsync<string>("Token");
+
+        dto.AddressDto = address;
+        dto.CustomerId = customer.CustomerID;
+        
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("bearer", jwtToken);
+        var result = await Http.PostAsJsonAsync(baseEndpoint + addAddress, dto);
+		var test = result;
+
+	
+    }
+}
+
+<PageTitle>Customer Address</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <EditForm Context="q" Model="@address" OnSubmit="SubmitAddress">
+        <h3>Insert info to add address</h3>
+
+        <div class="form-outline form-white mb-4">
+                <InputNumber id="customerId" name="CustomerId" @bind-Value="customer.CustomerID" class="form-control form-control-lg" />                
+        </div>
+        <div class="form-outline form-white mb-4">
+                <InputText id="address1" name="StreetAddress" @bind-Value="address.StreetAddress" class="form-control form-control-lg" />                
+        </div>
+        <div class="form-outline form-white mb-4">
+                <InputText id="address13" name="StreetNumber" @bind-Value="address.StreetNumber" class="form-control form-control-lg" />                
+        </div>
+        <div class="form-outline form-white mb-4">
+                <InputText id="address2" name="Town" @bind-Value="address.Town" class="form-control form-control-lg" />                
+        </div>
+        <div class="form-outline form-white mb-4">
+                <InputText id="address14" name="Zipcode" @bind-Value="address.Zipcode" class="form-control form-control-lg" />                
+        </div>
+        <input type="submit" value="Register" @onclick="SubmitAddress" class="btn btn-info btn-block" style="margin-top: 1rem;">
+ </EditForm>       
+ </Authorized>
+    <NotAuthorized>
+        <span>Do you see this u unauthorized fag?!</span>
+    </NotAuthorized>
+</AuthorizeView>

@@ -9,7 +9,7 @@
 @page "/getcustomer"
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
 
-@code {   
+@code {
 
     private string baseEndpoint = "https://localhost:44384";
     private string retrieveCustomer = "/api/Test/GetCustomer?id=";
@@ -18,74 +18,72 @@
     private string userid = "";
 
     public Customer customer = new Customer();
-    //private CustomerDTO customerDTO = new CustomerDTO
 
-
-    protected async override Task OnInitializedAsync()
+ 
+    private async Task GetCustomerInfo()
     {
-
-        jwtToken = await LocalStorage.GetItemAsync<string>("Token");
-        userid = await GetIDClaim();
+        jwtToken = await LocalStorage.GetItemAsync<string>("Token");        
 
         Http.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("bearer", jwtToken);
+        var result = await Http.GetAsync(baseEndpoint + retrieveCustomer + customer.CustomerID);
+        var customerString = await result.Content.ReadAsStringAsync();
 
-        var response = await Http.GetAsync(baseEndpoint + retrieveCustomer + userid);
-        var responseString = await response.Content.ReadAsStringAsync();
-        customer = JsonConvert.DeserializeObject<Customer>(responseString);
-            
+        customer = JsonConvert.DeserializeObject<Customer>(customerString);
+
     }
-
-    private async Task<string> GetIDClaim() //giver et ID man kan bruge
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        return authState.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;;
-    }
-
 }
 
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Customer</PageTitle>
 
 <AuthorizeView>
     <Authorized>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-xl-4 col-md-6 mb-4">
-                    <div class="card border-left shadow h-100 py-2" style="border-left: .25rem solid #1cc88a !important">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                        Welcome back
-                                    </div>
-                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                        @customer.Firstname  @customer.Lastname
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <EditForm Context="q" Model="@customer" OnSubmit="GetCustomerInfo">
+
+        <div class="form-outline form-white mb-4">
+                <InputNumber id="customerId" @bind-Value="customer.CustomerID" class="form-control form-control-lg" /> 
                 
-                        <div class="CustomerInfo">
-                            @if (customer == null)
-                            {
-                                <p><em>Loading...</em></p>
-                            }
-                            else
-                            {
-                                @foreach (var c in customer)
-                                {
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item list-group-item-action">@c</li>
-                                    </ul>
-                                }
-                            }
-                        </div>
-                    </div>
-                </div>
+        </div>
+        <input type="submit" value="Register" @onclick="GetCustomerInfo" class="btn btn-info btn-block" style="margin-top: 1rem;">
+        </EditForm>
+        <div class="container-fluid">                           
+            <div class="CustomerInfo">
+             @if (customer.CustomerID == null)
+                {
+                    <p><em>Loading...</em></p>
+                }
+                else
+                {
+                               
+                    <ul class="list-group list-group-flush">
+                            <label class="form-label h-50" style="margin: 0;">Firstname</label>
+                            <li class="list-group-item list-group-item-action">@customer.Firstname</li>
+                            <label class="form-label h-50" style="margin: 0;">Lastname</label>
+                            <li class="list-group-item list-group-item-action">@customer.Lastname</li>
+                            <label class="form-label h-50" style="margin: 0;">CustomerID</label>
+                            <li class="list-group-item list-group-item-action">@customer.CustomerID</li>
+                            <label class="form-label h-50" style="margin: 0;">Email</label>
+                            <li class="list-group-item list-group-item-action">@customer.Email</li>
+                            <label class="form-label h-50" style="margin: 0;">StreetAddress</label>
+                            <li class="list-group-item list-group-item-action">@customer.UserAddress?.StreetAddress</li>
+                            <label class="form-label h-50" style="margin: 0;">StreetNumber</label>
+                            <li class="list-group-item list-group-item-action">@customer.UserAddress?.StreetNumber</li>
+                            <label class="form-label h-50" style="margin: 0;">Town</label>
+                            <li class="list-group-item list-group-item-action">@customer.UserAddress?.Town</li>
+                            <label class="form-label h-50" style="margin: 0;">Zipcode</label>
+                            <li class="list-group-item list-group-item-action">@customer.UserAddress?.Zipcode</li>
+                            <label class="form-label h-50" style="margin: 0;">PhoneNr</label>
+                            <li class="list-group-item list-group-item-action">@customer.PhoneNr</li>
+                            <label class="form-label h-50" style="margin: 0;">Username</label>
+                            <li class="list-group-item list-group-item-action">@customer.Username</li>
+                            <label class="form-label h-50" style="margin: 0;">Roles</label>
+                            <li class="list-group-item list-group-item-action">@customer.Roles</li>                                       
+                    </ul>
+            }
+            </div>
+        </div>  
+    
     </Authorized>
     <NotAuthorized>
         <span>Do you see this u unauthorized fag?!</span>

@@ -34,7 +34,7 @@ namespace MotorKontor.BL.Controllers
 
             var response = await _loginService.Authenticate(newCustomer, ipAddress());
 
-            if(response == null)
+            if (response == null)
                 return new UnauthorizedObjectResult(response);
 
             return new OkObjectResult(response);
@@ -45,7 +45,7 @@ namespace MotorKontor.BL.Controllers
         {
             var response = await _loginService.RefreshToken(model.Token, ipAddress());
 
-            if(response==null)
+            if (response == null)
                 return new NotFoundObjectResult(response);
 
             return new OkObjectResult(response);
@@ -87,9 +87,9 @@ namespace MotorKontor.BL.Controllers
 
         //POST
         [HttpPost("AddAddress")]
-        public async Task<ActionResult<bool>> PostAddressAsync(AddressDTO address, int customerid)
+        public async Task<ActionResult<bool>> PostAddressAsync(CombinedAddressCustomerDTO dto)
         {
-            var response = await _service.PostAddressAsync(address, customerid);
+            var response = await _service.PostAddressAsync(dto.AddressDto, dto.CustomerId);
             if (response == false)
                 return new NotFoundObjectResult(response);
 
@@ -128,7 +128,7 @@ namespace MotorKontor.BL.Controllers
             return new OkObjectResult(response);
         }
 
-        
+
         [HttpGet("GetCustomersAsync"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Customer>>> GetCustomersAsync()
         {
@@ -166,7 +166,7 @@ namespace MotorKontor.BL.Controllers
         {
             return await _service.AvailableVehicleToLease();
         }
-        
+
         [HttpGet("GetCustomersByCity")]
         public async Task<ActionResult<List<Customer>>> GetCustomersFromCity(string city)
         {

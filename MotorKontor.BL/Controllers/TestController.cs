@@ -119,7 +119,7 @@ namespace MotorKontor.BL.Controllers
 
         [AllowAnonymous]
         [HttpPost("PostCustomer")]
-        public async Task<ActionResult<bool>> PostCustomerAsync(CustomerDTO customer)
+        public async Task<ActionResult<bool>> PostCustomerAsync([FromBody] CustomerDTO customer)
         {
             var response = await _service.PostCustomerAsync(customer);
             if (response == false)

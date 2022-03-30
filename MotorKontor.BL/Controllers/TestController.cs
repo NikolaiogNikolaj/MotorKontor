@@ -183,7 +183,32 @@ namespace MotorKontor.BL.Controllers
         }
 
 
+        [HttpDelete("Delete-Customer")]
+        //[Authorize(Roles = "Superadmin")]
+        public async Task<ActionResult<bool>> DeleteCustomerAsync(int id)
+        {
+            return await _service.DeleteCustomerAsync(id);
+        }
+        [HttpDelete("Delete-Vehicle")]
+        //[Authorize(Roles = "Superadmin")]
+        public async Task<ActionResult<bool>> DeleteVehicleAsync(int id)
+        {
+            return await _service.DeleteVehicleAsync(id);
+        }
 
+        [HttpDelete("Delete-Customer Vehicle")]
+        //[Authorize(Roles = "Superadmin")]
+        public async Task<ActionResult<bool>> DeleteCustomerVehicleAsync(int registrationId, int customerId)
+        {
+            return await _service.DeleteCustomerVehicleAsync(registrationId, customerId);
+        }
+
+        [HttpDelete("Delete-Customer Address")]
+        //[Authorize(Roles = "Superadmin")]
+        public async Task<ActionResult<bool>> DeleteCustomerAddressAsync(int customerId)
+        {
+            return await _service.DeleteCustomerAddressAsync(customerId);
+        }
 
     }
 }

@@ -25,7 +25,16 @@ namespace MotorKontor.BL.Interfaces
         Task<List<Customer>> GetCustomersFromCity(string city);
         Task<List<Vehicle>> AvailableVehicleToLease();
 
+
+        //UPDATE
         Task<bool> UpdateCustomer(CustomerDTO customer);
 
+
+        //REMOVES
+
+        Task<bool> DeleteCustomerVehicleAsync(int id, int customerid);
+        Task<bool> DeleteCustomerAddressAsync(int customerid);
+        Task<bool> DeleteCustomerAsync(int id);
+        Task<bool> DeleteVehicleAsync(int vehicleid);
     }
 }

@@ -108,23 +108,49 @@ namespace MotorKontor.BL.Service
         }
 
         //  REMOVE METHODS 
-        public async Task<bool> RemoveCustomerAsync(int id)
+        public async Task<bool> DeleteCustomerAsync(int id)
         {
             var userResponse = await _repository.GetCustomerAsync(id);
             if (userResponse == null)
                 return false;
 
-            return await _repository.RemoveCustomerAsync(userResponse);
+            return await _repository.DeleteCustomerAsync(userResponse);
         }
 
-        public async Task<bool> RemoveVehicleAsync(int vehicleid)
+
+        public async Task<bool> DeleteVehicleAsync(int vehicleid)
         {
             var vehicleReponse = await _repository.GetVehicleAsync(vehicleid);
             if (vehicleReponse == null)
                 return false;
 
-            return await _repository.RemoveVehicleAsync(vehicleReponse);
+            return await _repository.DeleteVehicleAsync(vehicleReponse);
         }
+        public async Task<bool> DeleteCustomerVehicleAsync(int registrationid, int customerid)
+        {
+            var customerVehicle = await _repository.GetCustomerAsync(customerid);
+            if (customerVehicle == null)
+                return false;
+
+            var registration = customerVehicle.UserRegistratedVehicles.SingleOrDefault(x => x.RegistrationID == registrationid);
+
+            customerVehicle.UserRegistratedVehicles.Remove(registration);
+            return await _repository.UpdateCustomerAsync(customerVehicle);
+        }
+
+        ////skal nok laves om
+        public async Task<bool> DeleteCustomerAddressAsync(int customerid)
+        {
+            var customerAddress = await _repository.GetCustomerAsync(customerid);
+            if (customerAddress == null)
+                return false;
+
+            customerAddress.UserAddress = null;
+
+            return await _repository.DeleteCustomerAsync(customerAddress);
+
+        }
+
 
     }
 }

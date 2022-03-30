@@ -24,4 +24,8 @@
     <Folder Include="Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MotorKontor.UI\MotorKontor.UI.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,93 @@
+﻿@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MotorKontor.UI.Models.DTO
+@using MotorKontor.UI.Models
+@using System.Net.Http.Headers
+@using Microsoft.AspNetCore.Identity;
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService LocalStorage
+@page "/getcustomer"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+@code {   
+
+    private string baseEndpoint = "https://localhost:44384";
+    private string retrieveCustomer = "/api/Test/GetCustomer?id=";
+
+    private string jwtToken = "";
+    private string userid = "";
+
+    public Customer customer = new Customer();
+    //private CustomerDTO customerDTO = new CustomerDTO
+
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        jwtToken = await LocalStorage.GetItemAsync<string>("Token");
+        userid = await GetIDClaim();
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("bearer", jwtToken);
+
+        var response = await Http.GetAsync(baseEndpoint + retrieveCustomer + userid);
+        var responseString = await response.Content.ReadAsStringAsync();
+        customer = JsonConvert.DeserializeObject<Customer>(responseString);
+            
+    }
+
+    private async Task<string> GetIDClaim() //giver et ID man kan bruge
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        return authState.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;;
+    }
+
+}
+
+
+<PageTitle>Index</PageTitle>
+
+<AuthorizeView>
+    <Authorized>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-4 col-md-6 mb-4">
+                    <div class="card border-left shadow h-100 py-2" style="border-left: .25rem solid #1cc88a !important">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                        Welcome back
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        @customer.Firstname  @customer.Lastname
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                        <div class="CustomerInfo">
+                            @if (customer == null)
+                            {
+                                <p><em>Loading...</em></p>
+                            }
+                            else
+                            {
+                                @foreach (var c in customer)
+                                {
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item list-group-item-action">@c</li>
+                                    </ul>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+    </Authorized>
+    <NotAuthorized>
+        <span>Do you see this u unauthorized fag?!</span>
+    </NotAuthorized>
+</AuthorizeView>

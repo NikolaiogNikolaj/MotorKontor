@@ -1,0 +1,76 @@
+﻿@page "/LeaseVehicles"
+@using MotorKontor.UI.Models.DTO
+@using MotorKontor.UI.Models.JWT
+@using Newtonsoft.Json
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILocalStorageService LocalStorage
+@inject HttpClient Http
+
+@code {
+    LeaseVehicleDTO lease = new LeaseVehicleDTO();
+
+    string baseEndpoint = "https://localhost:44384";
+    string loginEndpoint = "/api/Test/LeaseVehicle"; //Dummy
+
+    private string jwtToken = "";
+
+
+    private string leasingMonths = "";
+    private string vehicleID = "";
+
+    private async Task HandleLeasing()
+    {
+        lease.CustomerID = Int32.Parse(await GetIDClaim());
+        lease.LeasingMonths = Int32.Parse(leasingMonths);
+        lease.VehicleID = Int32.Parse(vehicleID);
+
+        var result = await Http.PostAsJsonAsync(baseEndpoint + loginEndpoint, lease);
+    }
+
+    private async Task<string> GetIDClaim()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        return authState.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+    }
+}
+
+
+<AuthorizeView>
+    <Authorized>
+        <EditForm Context="test" Model="@lease" OnSubmit="HandleLeasing">
+            <section class="container">
+                <div class="row centered-form">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-sm-offset-2 col-md-offset-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+						        <h3 class="panel-title">Please sign up <small>It's free!</small></h3>
+                            </div>
+                            <div class="panel-body">
+                                <form role="form">
+			    			        <div class="row" style="margin-top: 1rem;">
+			    				        <div class="col-xs-6 col-sm-6 col-md-6">
+			    					        <div class="form-group">
+									            <InputText type="text" name="Leasingmonths" @bind-Value="@leasingMonths"  id="Leasingmonths" class="form-control input-sm" placeholder="Leasing months" />
+			    					        </div>
+			    				        </div>
+			    				        <div class="col-xs-6 col-sm-6 col-md-6">
+			    					        <div class="form-group">
+			    						        <InputText type="number" name="Vehicleid" @bind-Value="@vehicleID" id="Vehicleid" class="form-control input-sm" placeholder="Vehicle ID" />
+			    					        </div>
+			    				        </div>
+			    			        </div>
+			    			        <input type="submit" @onclick="@HandleLeasing" value="Register" class="btn btn-info btn-block" style="margin-top: 1rem;" />
+			    		
+			    		        </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </EditForm>
+    </Authorized>
+    <NotAuthorized>
+        <span>Do you see this u unauthorized fag?!</span>
+    </NotAuthorized>
+</AuthorizeView>

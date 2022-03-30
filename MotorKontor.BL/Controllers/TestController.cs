@@ -97,10 +97,10 @@ namespace MotorKontor.BL.Controllers
         }
 
 
-        [HttpPost("AddCustomer")]
-        public async Task<ActionResult> LeaseVehicleToCustomer(int customerid, int vehicleid, int leasingmonths)
+        [HttpPost("LeaseVehicle")]
+        public async Task<ActionResult> LeaseVehicleToCustomer([FromBody] LeaseVehicleDTO l)
         {
-            var response = await _service.LeaseVehicleToCustomer(customerid, vehicleid, leasingmonths);
+            var response = await _service.LeaseVehicleToCustomer(l.CustomerID, l.LeasingMonths, l.VehicleID);
             if (response == false)
                 return new NotFoundObjectResult(response);
 
@@ -119,7 +119,7 @@ namespace MotorKontor.BL.Controllers
 
         [AllowAnonymous]
         [HttpPost("PostCustomer")]
-        public async Task<ActionResult<bool>> PostCustomerAsync(CustomerDTO customer)
+        public async Task<ActionResult<bool>> PostCustomerAsync([FromBody] CustomerDTO customer)
         {
             var response = await _service.PostCustomerAsync(customer);
             if (response == false)
